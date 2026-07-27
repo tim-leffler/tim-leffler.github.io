@@ -92,9 +92,7 @@ h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing:
 .portrait img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: 50% 42%;
+  height: auto;
 }
 .current-roles { margin: 28px 0 0; color: var(--muted); font-size: .92rem; }
 
