@@ -90,9 +90,23 @@ h3 { margin: 10px 0 14px; font-size: clamp(1.4rem, 2.5vw, 2rem); letter-spacing:
 .button-secondary { color: var(--green); }
 .button-secondary:hover { background: var(--sage); }
 
-.affiliation-card { padding: 34px; background: var(--paper); border-top: 4px solid var(--green); }
+.hero-side { display: grid; align-self: stretch; }
+.portrait {
+  min-height: 310px;
+  margin: 0;
+  overflow: hidden;
+  background: var(--sage);
+}
+.portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+}
+.affiliation-card { padding: 28px 32px 30px; background: var(--paper); border-top: 4px solid var(--green); }
 .affiliation-card ul { margin: 0; padding: 0; list-style: none; }
-.affiliation-card li { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.affiliation-card li { padding: 13px 0; border-bottom: 1px solid var(--line); }
 .affiliation-card li:last-child { border-bottom: 0; padding-bottom: 0; }
 .affiliation-card span, .affiliation-card a { display: block; }
 .affiliation-card span { color: var(--muted); font-size: .86rem; }
@@ -146,6 +160,8 @@ footer { padding-block: 28px; background: var(--paper); border-top: 1px solid va
   .nav-links { gap: 18px; }
   .nav-links a:nth-child(1) { display: none; }
   .hero { min-height: auto; padding-block: 72px; grid-template-columns: 1fr; gap: 48px; }
+  .hero-side { grid-template-columns: minmax(220px, .85fr) minmax(300px, 1.15fr); align-items: stretch; }
+  .portrait { min-height: 380px; }
   .two-column { grid-template-columns: 1fr; gap: 32px; }
   .section { padding-block: 72px; }
   .section-heading, .cv-panel { align-items: start; flex-direction: column; }
@@ -159,6 +175,8 @@ footer { padding-block: 28px; background: var(--paper); border-top: 1px solid va
   .nav-links { gap: 14px; }
   .nav-links a { font-size: .84rem; }
   .hero { padding-top: 56px; }
+  .hero-side { grid-template-columns: 1fr; }
+  .portrait { min-height: 410px; max-height: 520px; }
   .paper-meta { align-items: flex-start; flex-direction: column; gap: 5px; }
   .paper-meta .status { padding-left: 0; border-left: 0; }
   .footer-inner { gap: 12px; flex-direction: column; }
