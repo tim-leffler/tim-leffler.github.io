@@ -101,6 +101,13 @@ h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing:
 .two-column { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 96px; }
 .body-copy { color: var(--muted); font-size: 1.08rem; }
 .body-copy p:first-child { margin-top: 0; }
+.personal-note {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: .96rem;
+}
+.personal-note strong { color: var(--ink); }
 .section-heading {
   display: flex;
   align-items: end;
