@@ -140,7 +140,11 @@ h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing:
 .contact-grid { align-items: start; }
 .contact-details { padding-top: 8px; }
 .email { color: var(--green); font-family: var(--serif); font-size: clamp(1.3rem, 2.8vw, 2rem); font-weight: 600; }
+.contact-email-list p { margin: 0 0 18px; }
+.contact-email-list span { display: block; color: var(--muted); font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.email-secondary { color: var(--green); font-size: 1rem; font-weight: 500; }
 .contact-details p { margin-top: 28px; color: var(--muted); }
+.contact-details .contact-email-list p { margin-top: 0; }
 
 footer { padding-block: 28px; background: var(--paper); border-top: 1px solid var(--line); }
 .footer-inner { display: flex; justify-content: space-between; color: var(--muted); font-size: .88rem; }
