@@ -145,6 +145,12 @@ h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing:
 .email { color: var(--green); font-family: var(--serif); font-size: clamp(1.3rem, 2.8vw, 2rem); font-weight: 600; }
 .contact-email-list p { margin: 0 0 18px; }
 .contact-email-list span { display: block; color: var(--muted); font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.profile-group { margin-bottom: 18px; }
+.profile-links { display: flex; gap: 12px; margin-top: 8px; }
+.profile-icon { display: inline-flex; width: 32px; height: 32px; color: var(--green); text-decoration: none; }
+.profile-icon:hover { color: var(--green-dark); }
+.profile-icon svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+.profile-icon:first-child svg path { fill: var(--white); }
 .email-secondary { color: var(--green); font-size: 1rem; font-weight: 500; }
 .contact-details p { margin-top: 28px; color: var(--muted); }
 .contact-details .contact-email-list p { margin-top: 0; }
