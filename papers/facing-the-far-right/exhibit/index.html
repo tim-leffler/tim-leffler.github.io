@@ -66,8 +66,10 @@ header.hero { padding-block: 56px 48px; display: grid; grid-template-columns: mi
 .figures b { font-family: var(--label); font-weight: 500; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
 
 section.story { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; padding-block: 64px; border-top: 1px solid var(--rule); }
+.result-definition { grid-column: 1 / -1; display: grid; gap: 10px; max-width: 900px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); }
+.result-definition p { max-width: 76ch; font-size: 1.08rem; }
 .text { display: grid; gap: 18px; align-content: start; max-width: 60ch; }
-.text .kicker { color: var(--muted); font-family: var(--label); font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
+.text .kicker, .result-definition .kicker { color: var(--muted); font-family: var(--label); font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
 .text p.note { font-size: .92rem; color: var(--muted); }
 .fig { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; display: grid; gap: 14px; min-width: 0; }
 .card { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
@@ -318,10 +320,14 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
 
 <!-- 5 · result -->
 <section class="story" id="result">
+  <div class="result-definition">
+    <div class="kicker">The outcome</div>
+    <h2>What “public engagement” means</h2>
+    <p>Public engagement with the AfD is a joint measure of two observable behaviors during plenary speeches: verbal engagement—whether the speech names the AfD—and visual attention—the share of the speech spent in sustained episodes with the speaker’s head turned toward the AfD flank.</p>
+  </div>
   <div class="text">
     <div class="kicker">The result</div>
     <h2>More AfD colleagues, less public engagement</h2>
-    <p>We define public engagement with the AfD as a joint measure of two observable behaviors during plenary speeches: verbal engagement—whether the speech names the AfD—and visual attention—the share of the speech spent in sustained episodes with the speaker’s head turned toward the AfD flank.</p>
     <p>We follow the same legislators before and after the AfD’s entry and compare those who ended up with more AfD committee colleagues to those with fewer. Moving from the least to the most exposed committee portfolio lowers this joint measure by 0.41 standard deviations. Both components fall, with the naming result being the more robust of the two.</p>
     <p>Drag the exposure slider to see what the AfD estimate means in speeches. The range spans about one and a quarter additional AfD members on a committee of average size.</p>
     <p class="note">Legislator and calendar-quarter fixed effects; 95 percent intervals from standard errors clustered on the legislator (Appendix Table A6). Shares are predicted at the least- and most-exposed portfolio and interpolated linearly in between.</p>
