@@ -199,7 +199,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
     <h2>Twenty-five seconds, measured word by word</h2>
     <p>Every plenary speech is broadcast and transcribed. We align the transcript to the recording word by word, so each word has a start and an end time. Within that interval we read the speaker’s head pose and hands from the video and the pitch and loudness of the voice from the audio.</p>
     <p>This excerpt is from a speech by Frank Steffel (CDU/CSU) on 1 February 2019. He first addresses the Left, on his far left, and then names the AfD, on his far right. The playback stops at six steps that show what is measured, and what happens when the camera cuts away.</p>
-    <p>The panel beside the video lists what is recorded for the word being spoken. The chamber shows the head angle as a line from the speaker’s position.</p>
+    <p>The panel beside the video lists what is recorded for the word being spoken. The chamber shows the head angle as a line from the speaker’s position; the timeline plots head angle above and the synchronized pitch and loudness measures below.</p>
     <p class="note">The angle is a turn of the head toward a block of seats, not eye contact. The paper attributes an angle to a party only on the two flanks, where one group fills the view: the AfD from +45°, the Left from −53°. In the centre of the chamber several groups sit behind one another along any line of sight, so angles there are reported but not assigned to a party.</p>
   </div>
   <div class="fig">
@@ -228,7 +228,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
       </div>
       <div class="steps" id="dSteps" role="group" aria-label="Steps"></div>
       <div class="stepbox" id="dStep"><b></b><span></span></div>
-      <svg class="timeline" id="dTl" viewBox="0 0 640 150" role="slider" tabindex="0" aria-label="Position in the excerpt"></svg>
+      <svg class="timeline" id="dTl" viewBox="0 0 640 268" role="slider" tabindex="0" aria-label="Head angle, pitch and loudness across the excerpt"></svg>
       <div class="controls">
         <button class="btn" id="dPlay" type="button">Play</button>
         <button class="btn ghost" id="dRestart" type="button">Start over</button>
@@ -600,7 +600,7 @@ function clock(vid, offset, t0, t1, playBtn) {
   $('dWho').textContent = `${S.speaker} (${LAB[S.party]}), ${longDate(S.date)}, a 25-second excerpt.`;
   const ch = chamber($('chDemo'), D.plan.seats19, { sight: true });
   const tr = transcript($('dDe'), $('dEn'), M);
-  const tl = timeline($('dTl'), M, S.start, S.end, { tick: 5, secs: true, r: 2.4, gaps: true });
+  const tl = timeline($('dTl'), M, S.start, S.end, { tick: 5, secs: true, r: 2.4, gaps: true, voice: true });
   const c = clock($('dVid'), S.offset, S.start, S.end, $('dPlay'));
   const steps = S.steps;
   let shown = null, lastT = null, activeStep = -1;
