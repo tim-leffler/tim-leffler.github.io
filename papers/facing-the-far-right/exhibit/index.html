@@ -246,6 +246,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
     <h2>Six minutes at the lectern</h2>
     <p>The same measurement over a full speech: Achim Post (SPD) in the budget debate of 12 September 2018, the speech shown in the paper’s Figure 3.</p>
     <p>The timeline below the video plots the head angle at every word. Shaded bands mark the flank sectors; the coloured strips along the edges mark sustained episodes in them, which is what the attention outcome counts. Vertical lines mark words that name a party.</p>
+    <p>The lower panel follows the voice, as in the paper’s figure. Pitch and loudness are measured on each word and standardized within the speech, so 0 is this speaker’s typical level. The lines are averages over 15 words.</p>
     <p>About two minutes in, Post names the AfD twice and addresses it directly. His head turns to the AfD flank as he does, and the strip above the timeline marks the sustained episode that the attention outcome counts.</p>
     <p class="note">This speech illustrates the measurement. It is not evidence about this speaker. The paper’s results are averages over 9,376 speeches.</p>
   </div>
@@ -263,7 +264,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
           <div class="en" id="pEn" lang="en"></div>
         </div>
       </div>
-      <svg class="timeline" id="pTl" viewBox="0 0 640 160" role="slider" tabindex="0" aria-label="Position in the speech"></svg>
+      <svg class="timeline" id="pTl" viewBox="0 0 640 268" role="slider" tabindex="0" aria-label="Position in the speech"></svg>
       <div class="controls">
         <button class="btn" id="pPlay" type="button">Play</button>
         <button class="btn ghost" id="pJump" type="button">Jump to the AfD mention</button>
@@ -503,6 +504,14 @@ function transcript(deBox, enBox, M) {
     for (const s of spans) { const i = +s.dataset.i; s.classList.toggle('now', i === wi); s.classList.toggle('past', i < wi); }
   };
 }
+/* pitch or loudness as in the paper's Figure 3: (x − median) / (1.4826 · MAD) within the speech,
+   then a centred mean over 15 words that needs at least 5 values */
+function robustZ(xs) {
+  const med = a => { const s = a.slice().sort((p, q) => p - q), n = s.length, h = n >> 1; return n % 2 ? s[h] : (s[h - 1] + s[h]) / 2; };
+  const v = xs.filter(x => x !== null), m = med(v), mad = 1.4826 * med(v.map(x => Math.abs(x - m)));
+  const z = xs.map(x => x === null ? null : (x - m) / mad);
+  return z.map((_, i) => { let s = 0, n = 0; for (let k = i - 7; k <= i + 7; k++) if (z[k] != null) { s += z[k]; n++; } return n >= 5 ? s / n : null; });
+}
 function timeline(svg, M, t0, t1, o = {}) {
   const X0 = 36, X1 = 632, Y0 = 16, Y1 = o.h || 128;
   const tx = t => X0 + (X1 - X0) * (t - t0) / (t1 - t0);
@@ -512,8 +521,9 @@ function timeline(svg, M, t0, t1, o = {}) {
   el('line', { x1: X0, x2: X1, y1: ty(0), y2: ty(0), stroke: 'var(--rule)' }, svg);
   [[68, 'AfD sector'], [-72, 'Left sector']].forEach(([a, s]) => { const t = el('text', { x: X0 + 4, y: ty(a) + 4, 'font-size': 11 }, svg); t.textContent = s; });
   [-60, 0, 60].forEach(a => { const t = el('text', { x: X0 - 6, y: ty(a) + 4, 'font-size': 11, 'text-anchor': 'end' }, svg); t.textContent = fmtSign(a) + '°'; });
+  const XB = o.voice ? Y1 + 110 : Y1;            // bottom of the lowest panel; the time labels sit under it
   const step = o.tick || 60;
-  for (let s = Math.ceil(t0 / step) * step; s <= t1; s += step) { const t = el('text', { x: tx(s), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, svg); t.textContent = o.secs ? s + ' s' : mmss(s); }
+  for (let s = Math.ceil(t0 / step) * step; s <= t1; s += step) { const t = el('text', { x: tx(s), y: XB + 18, 'font-size': 11, 'text-anchor': 'middle' }, svg); t.textContent = o.secs ? s + ' s' : mmss(s); }
   const { W, ix } = M;
   // sustained flank episodes, as counted by the attention outcome
   W.forEach((w, i) => {
@@ -529,8 +539,26 @@ function timeline(svg, M, t0, t1, o = {}) {
   }
   W.forEach(w => { const p = w[ix.named]; if (!p) return; el('line', { x1: tx(w[ix.t0]), x2: tx(w[ix.t0]), y1: Y0, y2: Y1, class: 'p-' + p, stroke: 'currentColor', 'stroke-width': 1.5 }, svg); });
   if (o.gaps) W.forEach((w, i) => { if (w[ix.ang] !== null) return; el('rect', { x: tx(w[ix.t0]), width: Math.max(1.5, tx(w[ix.t1]) - tx(w[ix.t0])), y: ty(4), height: ty(-4) - ty(4), fill: 'var(--faint)', 'fill-opacity': .35 }, svg); });
-  const head = el('line', { x1: 0, x2: 0, y1: Y0 - 10, y2: Y1 + 8, stroke: 'var(--fg)', 'stroke-width': 2 }, svg);
-  el('rect', { x: X0, y: 0, width: X1 - X0, height: Y1 + 24, fill: 'transparent' }, svg);
+  // voice panel, as the bottom panel of the paper's Figure 3
+  if (o.voice) {
+    const V0 = Y1 + 30, V1 = XB;
+    const vy = z => V0 + (V1 - V0) * (2 - Math.max(-2, Math.min(2, z))) / 4;
+    el('line', { x1: X0, x2: X1, y1: vy(0), y2: vy(0), stroke: 'var(--rule)' }, svg);
+    [-1, 0, 1].forEach(z => { const t = el('text', { x: X0 - 6, y: vy(z) + 4, 'font-size': 11, 'text-anchor': 'end' }, svg); t.textContent = z ? fmtSign(z) : '0'; });
+    [['pitch', 'Pitch', 'var(--fg)', ''], ['loud', 'Loudness', 'var(--muted)', '4 2']].forEach(([k, lab, col, dash], j) => {
+      const z = robustZ(W.map(w => w[ix[k]]));
+      let d = '', pen = false;
+      z.forEach((v, i) => { if (v === null) { pen = false; return; } d += (pen ? 'L' : 'M') + tx(W[i][ix.t0]).toFixed(1) + ',' + vy(v).toFixed(1); pen = true; });
+      el('path', { d, fill: 'none', stroke: col, 'stroke-width': 1.3, 'stroke-dasharray': dash, 'stroke-linejoin': 'round' }, svg);
+      const lx = X0 + 4 + j * 64;
+      el('line', { x1: lx, x2: lx + 16, y1: V0 - 10, y2: V0 - 10, stroke: col, 'stroke-width': 1.6, 'stroke-dasharray': dash }, svg);
+      const t = el('text', { x: lx + 20, y: V0 - 6, 'font-size': 11 }, svg); t.textContent = lab;
+    });
+    const t = el('text', { x: X1, y: V0 - 6, 'font-size': 11, 'text-anchor': 'end' }, svg);
+    t.textContent = 'Within-speech robust z, 15-word average';
+  }
+  const head = el('line', { x1: 0, x2: 0, y1: Y0 - 10, y2: o.voice ? XB + 2 : Y1 + 8, stroke: 'var(--fg)', 'stroke-width': 2 }, svg);
+  el('rect', { x: X0, y: 0, width: X1 - X0, height: XB + 24, fill: 'transparent' }, svg);
   return {
     tx,
     set(t) { head.setAttribute('x1', tx(t)); head.setAttribute('x2', tx(t)); svg.setAttribute('aria-valuenow', Math.round(t)); },
@@ -636,7 +664,7 @@ function clock(vid, offset, t0, t1, playBtn) {
   const ch = chamber($('chPost'), D.plan.seats19, { sight: true });
   const tr = transcript($('pDe'), $('pEn'), M);
   const end = M.W[M.W.length - 1][ix.t1];
-  const tl = timeline($('pTl'), M, 0, Math.ceil(end / 30) * 30, { smooth: true });
+  const tl = timeline($('pTl'), M, 0, Math.ceil(end / 30) * 30, { smooth: true, voice: true });
   const c = clock($('pVid'), 0, 0, end, $('pPlay'));
   const firstAfd = M.W.find(w => w[ix.named] === 'afd');
   // open at rest on the first word of the AfD-flank episode around the first mention
