@@ -613,7 +613,7 @@ function clock(vid, offset, t0, t1, playBtn) {
   $('dWho').textContent = `${S.speaker} (${LAB[S.party]}), ${longDate(S.date)}, a 25-second excerpt.`;
   const ch = chamber($('chDemo'), D.plan.seats19, { sight: true });
   const tr = transcript($('dDe'), $('dEn'), M);
-  const tl = timeline($('dTl'), M, S.start, S.end, { tick: 5, secs: true, r: 2.4, gaps: true, voice: { dots: true, win: 5, lim: 3.2 } });
+  const tl = timeline($('dTl'), M, S.start, S.end, { tick: 5, secs: true, r: 2.4, gaps: true, voice: { win: 5, lim: 3.2 } });
   const c = clock($('dVid'), S.offset, S.start, S.end, $('dPlay'));
   const steps = S.steps;
   let shown = null, lastT = null, activeStep = -1;
