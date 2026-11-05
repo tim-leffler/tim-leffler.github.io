@@ -589,9 +589,12 @@ function clock(vid, offset, t0, t1, playBtn) {
   function frame(ts) {
     c.tick(ts);
     const t = c.t;
-    if (c.playing && lastT !== null && $('dHold').checked) {
+    if (c.playing && lastT !== null) {
       const k = steps.findIndex(s => lastT < s.t && s.t <= t);
-      if (k >= 0) { c.play(false); c.seek(steps[k].t); showStep(k); }
+      if (k >= 0) {
+        showStep(k);
+        if ($('dHold').checked) { c.play(false); c.seek(steps[k].t); }
+      }
     }
     lastT = c.t;
     const wi = M.wordAt(c.t);
