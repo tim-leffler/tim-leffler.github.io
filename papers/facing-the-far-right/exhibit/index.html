@@ -71,7 +71,10 @@ section.story { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8
 .fig { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; display: grid; gap: 14px; min-width: 0; }
 .card { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
 svg { display: block; width: 100%; height: auto; overflow: visible; }
-svg text { font-family: var(--label); fill: var(--muted); }
+svg text { font-family: var(--label); fill: var(--muted); font-weight: 500; }
+.axis-line { stroke: var(--fg); stroke-width: 1.25; opacity: .48; }
+.axis-tick { fill: var(--fg); font-weight: 600; }
+.axis-title { fill: var(--fg); font-size: 12px; font-weight: 600; }
 
 .p-linke { fill: var(--p-linke); color: var(--p-linke); }
 .p-spd { fill: var(--p-spd); color: var(--p-spd); }
@@ -163,7 +166,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
 <div class="wrap">
 <header class="hero">
   <div class="hero-text">
-    <div class="by"><a href="https://tim-leffler.github.io/" data-goatcounter-click="exhibit-homepage">Tim Leffler</a> · Munich Graduate School of Economics · Interactive companion to <a href="https://tim-leffler.github.io/papers/facing-the-far-right/" data-goatcounter-click="exhibit-paper-top">the paper</a></div>
+    <div class="by"><a href="https://tim-leffler.github.io/" data-goatcounter-click="exhibit-homepage">Tim Leffler</a> · Munich Graduate School of Economics · Interactive companion to <a href="https://tim-leffler.github.io/papers/facing-the-far-right/" data-goatcounter-click="download-jmp">the paper</a></div>
     <h1>Facing the Far Right, or Looking Away?</h1>
     <p class="dek">Bundestag legislators who share their committees with more AfD members name the party less often in their speeches and turn toward its benches less.</p>
     <div class="figures">
@@ -352,7 +355,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
 </section>
 
 <footer>
-  <div><h3>Paper</h3>Tim Leffler, “<a href="https://tim-leffler.github.io/papers/facing-the-far-right/" data-goatcounter-click="exhibit-paper-footer">Facing the Far Right, or Looking Away? Video Evidence from Parliament</a>,” job market paper, 2026. Seating from Appendix Figure A3, the speech from Figure 3, validation from Figure 2, estimates from Appendix Table A6.</div>
+  <div><h3>Paper</h3>Tim Leffler, “<a href="https://tim-leffler.github.io/papers/facing-the-far-right/" data-goatcounter-click="download-jmp">Facing the Far Right, or Looking Away? Video Evidence from Parliament</a>,” job market paper, 2026. Seating from Appendix Figure A3, the speech from Figure 3, validation from Figure 2, estimates from Appendix Table A6.</div>
   <div><h3>Video</h3>Source: Deutscher Bundestag. Two recordings of the Parlamentsfernsehen, used for educational purposes under its terms of use (25 March 2021). Anyone passing the clips on must point to those terms.</div>
   <div><h3>Translation</h3>The English lines are the author’s sentence-by-sentence translation of the German transcript. They are not an official translation; only the original speech is authoritative.</div>
   <div><h3>Limits</h3>Head orientation is a behavioral proxy, not eye contact, and is attributed to a party only on the two flanks. Estimates apply to legislators who kept at least one committee across the 2017 election, conditional on taking the floor, and are not statements about individual speakers.</div>
@@ -670,11 +673,13 @@ function clock(vid, offset, t0, t1, playBtn) {
   const qx = s => X0 + (X1 - X0) * (s + 4) / 8, qy = a => Y0 + (Y1 - Y0) * (20 - a) / 40;
   [-20, -10, 0, 10, 20].forEach(a => {
     el('line', { x1: X0, x2: X1, y1: qy(a), y2: qy(a), stroke: 'var(--rule)', 'stroke-dasharray': a ? '2 4' : '' }, tr);
-    const t = el('text', { x: X0 - 6, y: qy(a) + 4, 'font-size': 11, 'text-anchor': 'end' }, tr); t.textContent = fmtSign(a) + '°';
+    const t = el('text', { x: X0 - 6, y: qy(a) + 4, 'font-size': 11, 'text-anchor': 'end', class: 'axis-tick' }, tr); t.textContent = fmtSign(a) + '°';
   });
-  [-4, -2, 0, 2, 4].forEach(s => { const t = el('text', { x: qx(s), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, tr); t.textContent = s === 0 ? 'name spoken' : fmtSign(s) + ' s'; });
+  el('line', { x1: X0, x2: X1, y1: Y1, y2: Y1, class: 'axis-line' }, tr);
+  el('line', { x1: X0, x2: X0, y1: Y0, y2: Y1, class: 'axis-line' }, tr);
+  [-4, -2, 0, 2, 4].forEach(s => { const t = el('text', { x: qx(s), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle', class: 'axis-tick' }, tr); t.textContent = s === 0 ? 'name spoken' : fmtSign(s) + ' s'; });
   el('line', { x1: qx(0), x2: qx(0), y1: Y0, y2: Y1, stroke: 'var(--faint)', 'stroke-dasharray': '4 3' }, tr);
-  const yl = el('text', { x: X0, y: Y1 + 34, 'font-size': 11 }, tr); yl.textContent = 'Mean head angle, seconds relative to the naming word';
+  const yl = el('text', { x: X0, y: Y1 + 34, class: 'axis-title' }, tr); yl.textContent = 'Mean head angle, seconds relative to the naming word';
   const traces = {};
   for (const p of P) {
     const pts = D.fig2.traces[p], g = el('g', {}, tr);
@@ -723,9 +728,11 @@ function clock(vid, offset, t0, t1, playBtn) {
   const sx = n => X0 + (X1 - X0) * (n - 14) / 35, sy = v => Y0 + (Y1 - Y0) * (hi - v) / (hi - lo);
   el('rect', { x: X0, y: sy(14.3), width: X1 - X0, height: sy(11.1) - sy(14.3), class: 'p-afd', 'fill-opacity': .09 }, stp);
   const bt = el('text', { x: X1 - 4, y: 14, 'font-size': 11, 'text-anchor': 'end', class: 'p-afd' }, stp); bt.textContent = 'range of exposure in the sample';
-  [10, 12, 14, 16].forEach(v => { el('line', { x1: X0, x2: X1, y1: sy(v), y2: sy(v), stroke: 'var(--rule)', 'stroke-dasharray': '2 4' }, stp); const t = el('text', { x: X0 - 6, y: sy(v) + 4, 'font-size': 11, 'text-anchor': 'end' }, stp); t.textContent = v + '%'; });
-  [14, 20, 25, 30, 35, 40, 45, 49].forEach(n => { const t = el('text', { x: sx(n), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, stp); t.textContent = n; });
-  const xl = el('text', { x: X0, y: Y1 + 36, 'font-size': 11 }, stp); xl.textContent = 'Committee size (seats) and the AfD share of its seats';
+  [10, 12, 14, 16].forEach(v => { el('line', { x1: X0, x2: X1, y1: sy(v), y2: sy(v), stroke: 'var(--rule)', 'stroke-dasharray': '2 4' }, stp); const t = el('text', { x: X0 - 6, y: sy(v) + 4, 'font-size': 11, 'text-anchor': 'end', class: 'axis-tick' }, stp); t.textContent = v + '%'; });
+  el('line', { x1: X0, x2: X1, y1: Y1, y2: Y1, class: 'axis-line' }, stp);
+  el('line', { x1: X0, x2: X0, y1: Y0, y2: Y1, class: 'axis-line' }, stp);
+  [14, 20, 25, 30, 35, 40, 45, 49].forEach(n => { const t = el('text', { x: sx(n), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle', class: 'axis-tick' }, stp); t.textContent = n; });
+  const xl = el('text', { x: X0, y: Y1 + 36, class: 'axis-title' }, stp); xl.textContent = 'Committee size (seats) and the AfD share of its seats';
   el('path', { d: SIZES.map(([n, v], i) => (i ? 'L' + sx(n - .5) + ',' + sy(SIZES[i - 1][1]) + 'L' + sx(n - .5) + ',' + sy(v) : 'M' + sx(n - .5) + ',' + sy(v)) + 'L' + sx(n + .5) + ',' + sy(v)).join(''), fill: 'none', stroke: 'var(--fg)', 'stroke-width': 1.6 }, stp);
   const cur = el('circle', { r: 6, class: 'p-afd', stroke: 'var(--panel)', 'stroke-width': 2 }, stp);
   const cs = $('csize');
@@ -755,9 +762,10 @@ function clock(vid, offset, t0, t1, playBtn) {
   const X0 = 230, X1 = 620, fx = v => X0 + (X1 - X0) * (v + .8) / 1.6;
   [-.8, -.4, 0, .4, .8].forEach(v => {
     el('line', { x1: fx(v), x2: fx(v), y1: 6, y2: 190, stroke: v ? 'var(--rule)' : 'var(--faint)', 'stroke-dasharray': v ? '2 4' : '' }, fo);
-    const t = el('text', { x: fx(v), y: 206, 'font-size': 11, 'text-anchor': 'middle' }, fo); t.textContent = v ? fmtSign(v, 1) : '0';
+    const t = el('text', { x: fx(v), y: 206, 'font-size': 11, 'text-anchor': 'middle', class: 'axis-tick' }, fo); t.textContent = v ? fmtSign(v, 1) : '0';
   });
-  const fl = el('text', { x: X0, y: 224, 'font-size': 11 }, fo); fl.textContent = 'Effect of least-to-most exposure (standard deviations)';
+  el('line', { x1: X0, x2: X1, y1: 190, y2: 190, class: 'axis-line' }, fo);
+  const fl = el('text', { x: X0, y: 224, class: 'axis-title' }, fo); fl.textContent = 'Effect of least-to-most exposure (standard deviations)';
   NAMES.forEach((name, i) => {
     const y = 34 + i * 60;
     const lt = el('text', { x: 0, y: y + 4, 'font-size': 14 }, fo); lt.style.fill = 'var(--fg)'; lt.textContent = name;
