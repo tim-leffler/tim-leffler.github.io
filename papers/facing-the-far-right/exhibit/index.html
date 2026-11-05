@@ -21,6 +21,7 @@
   --p-cducsu: #333333;
   --p-fdp: #c9a800;
   --p-afd: #1f78b4;
+  --benchmark: #c43d35;
   --sight: #15171c;
   --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --label: "Archivo Narrow", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
@@ -33,13 +34,13 @@
   :root:not([data-theme="light"]) {
     --bg: #121418; --panel: #1a1d22; --fg: #e6e8ec; --muted: #a2a8b3; --faint: #737a86; --rule: #2e333b;
     --seat-off: #3a3f48; --p-linke: #d05aab; --p-spd: #ef5a5a; --p-gruene: #5fb257; --p-cducsu: #cfd2d8;
-    --p-fdp: #d4b419; --p-afd: #45a6dc; --sight: #f2f3f5; color-scheme: dark;
+    --p-fdp: #d4b419; --p-afd: #45a6dc; --benchmark: #ff746b; --sight: #f2f3f5; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121418; --panel: #1a1d22; --fg: #e6e8ec; --muted: #a2a8b3; --faint: #737a86; --rule: #2e333b;
   --seat-off: #3a3f48; --p-linke: #d05aab; --p-spd: #ef5a5a; --p-gruene: #5fb257; --p-cducsu: #cfd2d8;
-  --p-fdp: #d4b419; --p-afd: #45a6dc; --sight: #f2f3f5; color-scheme: dark;
+  --p-fdp: #d4b419; --p-afd: #45a6dc; --benchmark: #ff746b; --sight: #f2f3f5; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -296,10 +297,11 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
   <div class="text">
     <div class="kicker">The design</div>
     <h2>How many AfD colleagues you get is a matter of arithmetic</h2>
-    <p>Most legislative work happens in committees that meet behind closed doors, week after week. When the AfD entered in 2017, every committee received AfD members.</p>
-    <p>The Bundestag sets each committee’s size, and the Sainte-Laguë/Schepers procedure hands out the seats in proportion to group strength. Seats are indivisible, so the AfD share jumps up and down as committee size changes. A 27-seat committee gets three AfD members. A 28-seat committee gets four.</p>
-    <p>Legislators chose their committees before the AfD arrived. How many AfD colleagues they then got followed from this rule, not from their own choice. Among the legislators we study, the AfD share of committee colleagues runs from 11.1 to 14.3 percent.</p>
-    <p class="note">Group strengths at the start of the 19th term: CDU/CSU 246, SPD 153, AfD 92, FDP 80, Left 69, Greens 67.</p>
+    <p>The Bundestag divides detailed legislative work among permanent committees—for example on finance, health, or education. Each committee is a smaller version of parliament: its seats are distributed among the parliamentary groups in proportion to their strength in the full Bundestag.</p>
+    <p>After the 2017 election, the AfD held 92 of 709 Bundestag seats, or 13.0 percent, following a national vote share of 12.6 percent. The red line marks the 13.0 percent parliamentary benchmark that the committee allocation rule targets.</p>
+    <p>The staircase appears because committee seats cannot be divided. As committee size changes one seat at a time, the AfD’s proportional entitlement changes smoothly but its actual allocation must remain a whole number. A 27-seat committee therefore gets three AfD members; a 28-seat committee gets four, producing a discrete upward jump. Further changes in committee size generate the repeated rises and gradual declines in the graph.</p>
+    <p>Legislators chose their committees before the AfD arrived. How many AfD colleagues they then got followed from this arithmetic rather than from their own choice. Among the legislators we study, the resulting AfD share of committee colleagues ranges from 11.1 to 14.3 percent.</p>
+    <p class="note">Group strengths at the start of the 19th term: CDU/CSU 246, SPD 153, AfD 92, FDP 80, Left 69, Greens 67. Committee seats are allocated from parliamentary seat shares—not directly from election vote shares—using the Sainte-Laguë/Schepers procedure.</p>
   </div>
   <div class="fig">
     <div class="card">
@@ -309,7 +311,7 @@ footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; lette
       </div>
       <svg id="committee" viewBox="0 0 640 120" role="img" aria-label="Committee seats by parliamentary group"></svg>
       <div class="readout"><span class="ang" id="afdShareOut">14.3%</span><span class="sec" id="afdSeatsOut">4 AfD members</span></div>
-      <svg id="steps" viewBox="0 0 640 250" role="img" aria-label="AfD share of committee seats by committee size"></svg>
+      <svg id="steps" viewBox="0 0 640 250" role="img" aria-label="AfD share of committee seats by committee size, compared with its 13 percent Bundestag seat share"></svg>
     </div>
   </div>
 </section>
@@ -729,11 +731,15 @@ function clock(vid, offset, t0, t1, playBtn) {
   const com = $('committee'), stp = $('steps');
   const X0 = 48, X1 = 630, Y0 = 24, Y1 = 210, lo = 10, hi = 16;
   const sx = n => X0 + (X1 - X0) * (n - 14) / 35, sy = v => Y0 + (Y1 - Y0) * (hi - v) / (hi - lo);
+  const afdSeatShare = STRENGTH.afd / Object.values(STRENGTH).reduce((a, b) => a + b, 0) * 100;
   el('rect', { x: X0, y: sy(14.3), width: X1 - X0, height: sy(11.1) - sy(14.3), class: 'p-afd', 'fill-opacity': .09 }, stp);
   const bt = el('text', { x: X1 - 4, y: 14, 'font-size': 11, 'text-anchor': 'end', class: 'p-afd' }, stp); bt.textContent = 'range of exposure in the sample';
+  el('line', { x1: X0, x2: X0 + 24, y1: 10, y2: 10, stroke: 'var(--benchmark)', 'stroke-width': 2.4 }, stp);
+  const bl = el('text', { x: X0 + 30, y: 14, 'font-size': 11 }, stp); bl.style.fill = 'var(--benchmark)'; bl.style.fontWeight = '600'; bl.textContent = 'AfD Bundestag seat share: ' + afdSeatShare.toFixed(1) + '%';
   [10, 12, 14, 16].forEach(v => { el('line', { x1: X0, x2: X1, y1: sy(v), y2: sy(v), stroke: 'var(--rule)', 'stroke-dasharray': '2 4' }, stp); const t = el('text', { x: X0 - 6, y: sy(v) + 4, 'font-size': 11, 'text-anchor': 'end', class: 'axis-tick' }, stp); t.textContent = v + '%'; });
   el('line', { x1: X0, x2: X1, y1: Y1, y2: Y1, class: 'axis-line' }, stp);
   el('line', { x1: X0, x2: X0, y1: Y0, y2: Y1, class: 'axis-line' }, stp);
+  el('line', { x1: X0, x2: X1, y1: sy(afdSeatShare), y2: sy(afdSeatShare), stroke: 'var(--benchmark)', 'stroke-width': 2.2 }, stp);
   [14, 20, 25, 30, 35, 40, 45, 49].forEach(n => { const t = el('text', { x: sx(n), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle', class: 'axis-tick' }, stp); t.textContent = n; });
   const xl = el('text', { x: X0, y: Y1 + 36, class: 'axis-title' }, stp); xl.textContent = 'Committee size (seats) and the AfD share of its seats';
   el('path', { d: SIZES.map(([n, v], i) => (i ? 'L' + sx(n - .5) + ',' + sy(SIZES[i - 1][1]) + 'L' + sx(n - .5) + ',' + sy(v) : 'M' + sx(n - .5) + ',' + sy(v)) + 'L' + sx(n + .5) + ',' + sy(v)).join(''), fill: 'none', stroke: 'var(--fg)', 'stroke-width': 1.6 }, stp);
