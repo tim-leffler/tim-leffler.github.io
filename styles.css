@@ -67,6 +67,9 @@ h2 { margin: 0; font-size: clamp(1.8rem, 3.2vw, 2.7rem); letter-spacing: -.02em;
 h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing: -.008em; }
 .hero-affiliation { margin: 5px 0 22px; font-family: var(--serif); font-size: 1.35rem; }
 .hero-intro { max-width: 640px; margin: 0; color: var(--muted); font-size: 1.04rem; }
+.hero-email { margin: 13px 0 0; color: var(--muted); font-size: .92rem; }
+.hero-email span { margin-right: 8px; color: var(--ink); font-weight: 600; }
+.hero-email a { color: var(--green); }
 .job-market-note { margin-top: 22px; padding-left: 16px; border-left: 2px solid var(--green); }
 .job-market-note p { margin: 0; }
 .job-market-note p + p { margin-top: 2px; color: var(--muted); font-size: .88rem; }
@@ -129,6 +132,17 @@ h3 { margin: 8px 0 10px; font-size: clamp(1.25rem, 2vw, 1.6rem); letter-spacing:
 .paper p { max-width: 900px; color: var(--muted); }
 .paper .coauthors { margin-top: -6px; color: var(--ink); font-size: .92rem; }
 .paper-link { display: inline-block; margin-top: 4px; color: var(--green); font-weight: 600; }
+.paper-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 10px; }
+.paper-links .paper-link { margin-top: 0; }
+.exhibit-link {
+  display: inline-block;
+  padding: 7px 11px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.exhibit-link:hover { background: var(--green); color: var(--white); }
 
 .section-accent { background: var(--white); color: var(--ink); }
 .section-accent .section-kicker { color: var(--green); }

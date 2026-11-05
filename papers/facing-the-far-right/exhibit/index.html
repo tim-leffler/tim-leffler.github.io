@@ -1,0 +1,794 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Facing the Far Right</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo+Narrow:wght@400;500;600&display=swap">
+<style>
+/* Layout: long-form column on the left, a sticky instrument card on the right. The chamber, drawn
+   seat by seat from the paper's floor plan and seen from the speaker's position, recurs in every section. */
+:root {
+  --bg: #f1f2f4;
+  --panel: #fbfbfc;
+  --fg: #15171c;
+  --muted: #5b616d;
+  --faint: #8d939e;
+  --rule: #d5d8de;
+  --seat-off: #c3c7cf;
+  --p-linke: #b0348a;
+  --p-spd: #d7263d;
+  --p-gruene: #3a9a3a;
+  --p-cducsu: #333333;
+  --p-fdp: #c9a800;
+  --p-afd: #1f78b4;
+  --sight: #15171c;
+  --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --label: "Archivo Narrow", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --step-0: 1.0625rem;
+  --step-1: 1.3rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2.2rem, 5vw, 3.6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121418; --panel: #1a1d22; --fg: #e6e8ec; --muted: #a2a8b3; --faint: #737a86; --rule: #2e333b;
+    --seat-off: #3a3f48; --p-linke: #d05aab; --p-spd: #ef5a5a; --p-gruene: #5fb257; --p-cducsu: #cfd2d8;
+    --p-fdp: #d4b419; --p-afd: #45a6dc; --sight: #f2f3f5; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121418; --panel: #1a1d22; --fg: #e6e8ec; --muted: #a2a8b3; --faint: #737a86; --rule: #2e333b;
+  --seat-off: #3a3f48; --p-linke: #d05aab; --p-spd: #ef5a5a; --p-gruene: #5fb257; --p-cducsu: #cfd2d8;
+  --p-fdp: #d4b419; --p-afd: #45a6dc; --sight: #f2f3f5; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font-family: var(--serif); font-size: var(--step-0); line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1240px; margin: 0 auto; }
+h1, h2 { font-weight: 500; text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
+h1 { font-size: var(--step-3); line-height: 1.05; }
+h2 { font-size: var(--step-2); line-height: 1.15; }
+p { margin: 0; }
+.lab { font-family: var(--label); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--label); font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; }
+:focus-visible { outline: 2px solid var(--p-afd); outline-offset: 2px; }
+
+header.hero { padding-block: 56px 48px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+.hero-text { display: grid; gap: 18px; }
+.hero-text .dek { font-size: var(--step-1); color: var(--muted); max-width: 40ch; line-height: 1.4; }
+.hero-text .by { font-family: var(--label); font-size: .9rem; color: var(--muted); }
+.hero-text .by a, footer a { color: inherit; text-decoration-color: var(--faint); text-underline-offset: 2px; }
+.figures { display: flex; gap: 28px; flex-wrap: wrap; border-top: 1px solid var(--rule); }
+.figures div { display: grid; gap: 2px; padding-top: 12px; }
+.figures b { font-family: var(--label); font-weight: 500; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+
+section.story { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; padding-block: 64px; border-top: 1px solid var(--rule); }
+.text { display: grid; gap: 18px; align-content: start; max-width: 60ch; }
+.text .kicker { color: var(--muted); font-family: var(--label); font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
+.text p.note { font-size: .92rem; color: var(--muted); }
+.fig { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; display: grid; gap: 14px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font-family: var(--label); fill: var(--muted); }
+
+.p-linke { fill: var(--p-linke); color: var(--p-linke); }
+.p-spd { fill: var(--p-spd); color: var(--p-spd); }
+.p-gruene { fill: var(--p-gruene); color: var(--p-gruene); }
+.p-cducsu { fill: var(--p-cducsu); color: var(--p-cducsu); }
+.p-fdp { fill: var(--p-fdp); color: var(--p-fdp); }
+.p-afd { fill: var(--p-afd); color: var(--p-afd); }
+.seat { stroke: none; }
+.quiet .seat { opacity: .5; }
+.dim .seat { opacity: .25; }
+.shade { fill-opacity: .05; stroke: none; transition: fill-opacity .2s; }
+.shade.on { fill-opacity: .2; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--label); font-size: .88rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; display: inline-block; }
+.legend em { font-style: normal; color: var(--fg); }
+
+.player { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.col { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.video-frame { aspect-ratio: 16 / 9; max-width: 100%; background: #000; border-radius: 4px; overflow: hidden; }
+.video-frame video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.credit { font-family: var(--label); font-size: .78rem; color: var(--muted); line-height: 1.35; }
+.readout { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.readout .ang { font-family: var(--label); font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1; min-width: 4.2ch; }
+.readout .sec { font-family: var(--label); font-size: .95rem; }
+.badge { font-family: var(--label); font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; color: #fff; }
+.badge.afd { background: var(--p-afd); }
+.badge.left { background: var(--p-linke); }
+.de { font-size: 1.02rem; line-height: 1.5; color: var(--faint); }
+.de span.now { color: var(--fg); background: color-mix(in srgb, var(--p-afd) 16%, transparent); border-radius: 2px; }
+.de span.past { color: var(--fg); }
+.de span.m-afd { color: var(--p-afd); font-weight: 600; }
+.en { font-size: .95rem; line-height: 1.45; color: var(--muted); font-style: italic; border-left: 2px solid var(--rule); padding-left: 10px; }
+.en b { color: var(--p-afd); font-style: normal; }
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: var(--label); font-size: .9rem; }
+.btn { border: 1px solid var(--fg); background: var(--fg); color: var(--bg); border-radius: 4px; padding: 6px 14px; cursor: pointer; font-family: var(--label); font-size: .9rem; letter-spacing: .03em; }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--rule); }
+.timeline { cursor: ew-resize; touch-action: none; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--fg); padding: 6px 12px; cursor: pointer; font-family: var(--label); font-size: .9rem; }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+
+/* measurement sheet in the video-to-measure section */
+.sheet { display: grid; grid-template-columns: auto minmax(0, 1fr); font-family: var(--label); font-size: .92rem; border-top: 1px solid var(--rule); }
+.sheet dt, .sheet dd { margin: 0; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+.sheet dt { color: var(--muted); padding-right: 14px; }
+.sheet dd { font-variant-numeric: tabular-nums; }
+.sheet dd.miss { color: var(--faint); font-style: italic; }
+.steps { display: flex; flex-wrap: wrap; gap: 6px; }
+.steps button { border: 1px solid var(--rule); background: transparent; color: var(--fg); border-radius: 999px; padding: 3px 11px; cursor: pointer; font-family: var(--label); font-size: .86rem; }
+.steps button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.stepbox { border-left: 3px solid var(--fg); padding: 4px 0 4px 12px; display: grid; gap: 4px; min-height: 4.4em; }
+.stepbox b { font-family: var(--label); font-weight: 600; font-size: 1rem; }
+.stepbox span { font-size: .95rem; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--rule); background: transparent; color: var(--fg); border-radius: 999px; padding: 3px 11px 3px 9px; cursor: pointer; font-family: var(--label); font-size: .88rem; display: inline-flex; gap: 6px; align-items: center; }
+.chip i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; display: inline-block; }
+.chip[aria-pressed="true"] { border-color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
+.chip span { color: var(--fg); }
+
+input[type=range] { width: 100%; accent-color: var(--fg); }
+.slider-row { display: grid; gap: 6px; }
+.slider-row .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.big { font-family: var(--label); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.grid100 { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; }
+.grid100 i { aspect-ratio: 1; border-radius: 50%; background: var(--seat-off); transition: background .2s; }
+.grid100 i.on { background: var(--p-afd); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.stat { display: grid; gap: 4px; align-content: start; }
+
+footer { border-top: 1px solid var(--rule); padding-block: 40px 64px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); font-size: .9rem; color: var(--muted); }
+footer h3 { font-family: var(--label); font-weight: 600; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--fg); margin: 0 0 6px; }
+
+@media (max-width: 960px) {
+  header.hero, section.story { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  section.story { padding-block: 44px; }
+  .fig { position: static; }
+}
+@media (max-width: 600px) {
+  .player, .two { grid-template-columns: minmax(0, 1fr); }
+  .grid100 { grid-template-columns: repeat(10, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .shade, .grid100 i, .move { transition: none !important; } }
+.move { transition: transform .6s cubic-bezier(.3,.7,.2,1); }
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="hero-text">
+    <div class="by"><a href="https://tim-leffler.github.io/">Tim Leffler</a> · Munich Graduate School of Economics · Interactive companion to <a href="https://tim-leffler.github.io/papers/facing-the-far-right/">the paper</a></div>
+    <h1>Facing the Far Right, or Looking Away?</h1>
+    <p class="dek">Bundestag legislators who share their committees with more AfD members name the party less often in their speeches and turn toward its benches less.</p>
+    <div class="figures">
+      <div><b>23,000+</b><span class="lab">speeches aligned word by word</span></div>
+      <div><b>9,376</b><span class="lab">speeches in the estimation sample</span></div>
+      <div><b>269</b><span class="lab">legislators who kept a committee</span></div>
+      <div><b>−0.41 SD</b><span class="lab">engagement, least to most exposed</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Electoral term">
+        <button type="button" id="t18" aria-pressed="false">18th Bundestag, 2013–17</button>
+        <button type="button" id="t19" aria-pressed="true">19th Bundestag, 2017–21</button>
+      </div>
+    </div>
+    <svg id="chHero" viewBox="-800 0 1600 870" role="img" aria-label="Every seat of the plenary chamber, seen from the speaker's position"></svg>
+    <div class="legend" id="legHero"></div>
+    <p class="credit">The chamber as in the paper’s Appendix Figure A3, seen from where the speaker stands. The six front rows, the inner part of the plenary, are counted seat by seat from photographs of each term and placed on the chamber’s floor plan; the angles and sectors rest on these rows. The rows behind them are filled in to match each group’s seat count, with the aisles continued straight back, so their seat positions are approximate. The two rays mark the flank sectors the paper uses: the AfD from +45°, the Left from −53°.</p>
+  </div>
+</header>
+
+<!-- 1 · video to measure (the talk's example) -->
+<section class="story" id="pipeline">
+  <div class="text">
+    <div class="kicker">From video to measure</div>
+    <h2>Twenty-five seconds, measured word by word</h2>
+    <p>Every plenary speech is broadcast and transcribed. We align the transcript to the recording word by word, so each word has a start and an end time. Within that interval we read the speaker’s head pose and hands from the video and the pitch and loudness of the voice from the audio.</p>
+    <p>This excerpt is from a speech by Frank Steffel (CDU/CSU) on 1 February 2019. He first addresses the Left, on his far left, and then names the AfD, on his far right. The playback stops at six steps that show what is measured, and what happens when the camera cuts away.</p>
+    <p>The panel beside the video lists what is recorded for the word being spoken. The chamber shows the head angle as a line from the speaker’s position.</p>
+    <p class="note">The angle is a turn of the head toward a block of seats, not eye contact. The paper attributes an angle to a party only on the two flanks, where one group fills the view: the AfD from +45°, the Left from −53°. In the centre of the chamber several groups sit behind one another along any line of sight, so angles there are reported but not assigned to a party.</p>
+  </div>
+  <div class="fig">
+    <div class="card">
+      <div class="player">
+        <div class="col">
+          <div class="video-frame"><video id="dVid" playsinline preload="metadata" controls><source src="demo_11048_7_84-109.mp4" type="video/mp4"></video></div>
+          <div class="credit"><span id="dWho"></span> Video: Deutscher Bundestag, Parlamentsfernsehen.</div>
+          <div class="de" id="dDe" lang="de"></div>
+          <div class="en" id="dEn" lang="en"></div>
+        </div>
+        <div class="col">
+          <dl class="sheet" id="dSheet">
+            <dt>Word</dt><dd id="mWord"></dd>
+            <dt>Interval</dt><dd id="mInt"></dd>
+            <dt>Head angle</dt><dd id="mAng"></dd>
+            <dt>Direction</dt><dd id="mSec"></dd>
+            <dt>Flank episode</dt><dd id="mEp"></dd>
+            <dt>Gesture</dt><dd id="mGest"></dd>
+            <dt>Names the AfD</dt><dd id="mName"></dd>
+            <dt>Pitch</dt><dd id="mPitch"></dd>
+            <dt>Loudness</dt><dd id="mLoud"></dd>
+          </dl>
+          <svg id="chDemo" class="quiet" viewBox="-800 0 1600 870" role="img" aria-label="Head direction drawn on the chamber"></svg>
+        </div>
+      </div>
+      <div class="steps" id="dSteps" role="group" aria-label="Steps"></div>
+      <div class="stepbox" id="dStep"><b></b><span></span></div>
+      <svg class="timeline" id="dTl" viewBox="0 0 640 150" role="slider" tabindex="0" aria-label="Position in the excerpt"></svg>
+      <div class="controls">
+        <button class="btn" id="dPlay" type="button">Play</button>
+        <button class="btn ghost" id="dRestart" type="button">Start over</button>
+        <label class="lab" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="dHold" checked> Pause at each step</label>
+        <span class="num" id="dTime" style="margin-left:auto">0:00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · one whole speech (Figure 3) -->
+<section class="story" id="speech">
+  <div class="text">
+    <div class="kicker">One whole speech</div>
+    <h2>Six minutes at the lectern</h2>
+    <p>The same measurement over a full speech: Achim Post (SPD) in the budget debate of 12 September 2018, the speech shown in the paper’s Figure 3.</p>
+    <p>The timeline below the video plots the head angle at every word. Shaded bands mark the flank sectors; the coloured strips along the edges mark sustained episodes in them, which is what the attention outcome counts. Vertical lines mark words that name a party.</p>
+    <p>About two minutes in, Post names the AfD twice and addresses it directly. His head turns to the AfD flank as he does, and the strip above the timeline marks the sustained episode that the attention outcome counts.</p>
+    <p class="note">This speech illustrates the measurement. It is not evidence about this speaker. The paper’s results are averages over 9,376 speeches.</p>
+  </div>
+  <div class="fig">
+    <div class="card">
+      <svg id="chPost" class="quiet" viewBox="-800 0 1600 870" role="img" aria-label="Head direction drawn on the chamber"></svg>
+      <div class="player">
+        <div class="col">
+          <div class="video-frame"><video id="pVid" playsinline preload="metadata" controls><source src="speech_9487_8.mp4" type="video/mp4"></video></div>
+          <div class="credit"><span id="pWho"></span> Video: Deutscher Bundestag, Parlamentsfernsehen.</div>
+        </div>
+        <div class="col">
+          <div class="readout"><span class="ang" id="pAng">+0°</span><span class="sec" id="pSec"></span><span class="badge afd" id="pEpA" hidden>AfD-flank episode</span><span class="badge left" id="pEpL" hidden>Left-flank episode</span></div>
+          <div class="de" id="pDe" lang="de"></div>
+          <div class="en" id="pEn" lang="en"></div>
+        </div>
+      </div>
+      <svg class="timeline" id="pTl" viewBox="0 0 640 160" role="slider" tabindex="0" aria-label="Position in the speech"></svg>
+      <div class="controls">
+        <button class="btn" id="pPlay" type="button">Play</button>
+        <button class="btn ghost" id="pJump" type="button">Jump to the AfD mention</button>
+        <span class="num" id="pTime" style="margin-left:auto">0:00</span>
+      </div>
+      <p class="credit">English: a sentence-by-sentence translation of the German transcript. Words cannot be aligned across languages, so the highlighting follows the German.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · validation -->
+<section class="story" id="validation">
+  <div class="text">
+    <div class="kicker">Does the measure work?</div>
+    <h2>Naming a party turns the head toward it</h2>
+    <p>We took every word in the 19th Bundestag that names a parliamentary group other than the speaker’s own and measured the head angle in the 1.5 seconds that follow.</p>
+    <p>If head orientation tracks whom a speaker addresses, naming the Left should turn the head left and naming the AfD should turn it right, with the parties in between falling in between. The averages fall in exact seating order.</p>
+    <p>Select a party to see the full trace around the naming word. The turn begins about a second <em>before</em> the name: speakers face the group they are about to address, then name it.</p>
+    <p class="note">The averages sit well inside the flank sectors because speakers do not hold the turn for a whole sentence. They show the ordering; they do not make the centre of the chamber separable by angle. Each average is weighted by speaker, over several hundred speakers.</p>
+  </div>
+  <div class="fig">
+    <div class="card">
+      <div class="chips" id="chips"></div>
+      <div class="sec" id="rayLab" style="font-family:var(--label)"></div>
+      <svg id="chVal" class="dim" viewBox="-800 0 1600 870" role="img" aria-label="Rays from the speaker at the mean head angle after each party is named"></svg>
+      <svg id="trace" viewBox="0 0 640 230" role="img" aria-label="Mean head angle from four seconds before to four seconds after the naming word"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · allocation rule -->
+<section class="story" id="rule">
+  <div class="text">
+    <div class="kicker">The design</div>
+    <h2>How many AfD colleagues you get is a matter of arithmetic</h2>
+    <p>Most legislative work happens in committees that meet behind closed doors, week after week. When the AfD entered in 2017, every committee received AfD members.</p>
+    <p>The Bundestag sets each committee’s size, and the Sainte-Laguë/Schepers procedure hands out the seats in proportion to group strength. Seats are indivisible, so the AfD share jumps up and down as committee size changes. A 27-seat committee gets three AfD members. A 28-seat committee gets four.</p>
+    <p>Legislators chose their committees before the AfD arrived. How many AfD colleagues they then got followed from this rule, not from their own choice. Among the legislators we study, the AfD share of committee colleagues runs from 11.1 to 14.3 percent.</p>
+    <p class="note">Group strengths at the start of the 19th term: CDU/CSU 246, SPD 153, AfD 92, FDP 80, Left 69, Greens 67.</p>
+  </div>
+  <div class="fig">
+    <div class="card">
+      <div class="slider-row">
+        <div class="top"><label for="csize" class="lab">Committee size</label><span class="big" id="csizeOut">28 seats</span></div>
+        <input type="range" id="csize" min="14" max="49" step="1" value="28">
+      </div>
+      <svg id="committee" viewBox="0 0 640 120" role="img" aria-label="Committee seats by parliamentary group"></svg>
+      <div class="readout"><span class="ang" id="afdShareOut">14.3%</span><span class="sec" id="afdSeatsOut">4 AfD members</span></div>
+      <svg id="steps" viewBox="0 0 640 250" role="img" aria-label="AfD share of committee seats by committee size"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · result -->
+<section class="story" id="result">
+  <div class="text">
+    <div class="kicker">The result</div>
+    <h2>More AfD colleagues, less public engagement</h2>
+    <p>We follow the same legislators before and after the AfD’s entry and compare those who ended up with more AfD committee colleagues to those with fewer. Moving from the least to the most exposed committee portfolio lowers engagement with the AfD by 0.41 standard deviations.</p>
+    <p>Engagement averages two facets: whether a speech names the AfD at all, and the share of the speech spent in sustained episodes turned toward the AfD flank. Both fall. Naming is the more robust of the two.</p>
+    <p>The same rule also decides how many FDP colleagues a legislator has. The FDP returned to the Bundestag in the same election but carries no comparable stigma. Replacing AfD exposure with FDP exposure, none of the three outcomes declines.</p>
+    <p>Drag the exposure slider to see what the AfD estimate means in speeches. The range spans about one and a quarter additional AfD members on a committee of average size.</p>
+    <p class="note">Legislator and calendar-quarter fixed effects; 95 percent intervals from standard errors clustered on the legislator (Appendix Tables A6 and A4). Shares are predicted at the least- and most-exposed portfolio and interpolated linearly in between.</p>
+  </div>
+  <div class="fig">
+    <div class="card">
+      <span class="lab">The paper’s estimates</span>
+      <div class="legend"><span class="p-afd"><i></i><em>Exposure to AfD colleagues</em></span><span class="p-fdp"><i></i><em>Exposure to FDP colleagues (placebo)</em></span></div>
+      <svg id="forest" viewBox="0 0 640 230" role="img" aria-label="The paper's estimates: effect of least-to-most exposure, in standard deviations, for AfD and FDP exposure"></svg>
+      <p class="credit">Estimates as reported in the paper: AfD exposure from Appendix Table A6 (Figure 4), FDP placebo from Appendix Table A4. Each line is a 95 percent confidence interval.</p>
+    </div>
+    <div class="card">
+      <span class="lab">What the paper’s estimate means in speeches</span>
+      <div class="slider-row">
+        <div class="top"><label for="expo" class="lab">AfD share of committee colleagues</label><span class="big" id="expoOut">11.1%</span></div>
+        <input type="range" id="expo" min="11.1" max="14.3" step="0.1" value="11.1">
+        <div class="top"><span class="lab">least exposed</span><span class="lab" id="extraOut"></span><span class="lab">most exposed</span></div>
+      </div>
+      <div class="two">
+        <div class="stat">
+          <span class="lab">Speeches that name the AfD</span>
+          <span class="big" id="nameOut">35.4 of 100</span>
+          <div class="grid100" id="grid"></div>
+        </div>
+        <div class="stat">
+          <span class="lab">Speech time on the AfD flank</span>
+          <span class="big" id="attOut">5.1%</span>
+          <svg id="attBar" viewBox="0 0 300 70" role="img" aria-label="Share of speech in sustained orientation toward the AfD flank"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><h3>Paper</h3>Tim Leffler, “<a href="https://tim-leffler.github.io/papers/facing-the-far-right/">Facing the Far Right, or Looking Away? Video Evidence from Parliament</a>,” job market paper, 2026. Seating from Appendix Figure A3, the speech from Figure 3, validation from Figure 2, estimates from Appendix Tables A6 and A4.</div>
+  <div><h3>Video</h3>Source: Deutscher Bundestag. Two recordings of the Parlamentsfernsehen, used for educational purposes under its terms of use (25 March 2021). Anyone passing the clips on must point to those terms.</div>
+  <div><h3>Translation</h3>The English lines are the author’s sentence-by-sentence translation of the German transcript. They are not an official translation; only the original speech is authoritative.</div>
+  <div><h3>Limits</h3>Head orientation is a behavioral proxy, not eye contact, and is attributed to a party only on the two flanks. Estimates apply to legislators who kept at least one committee across the 2017 election, conditional on taking the floor, and are not statements about individual speakers.</div>
+</footer>
+</div>
+
+<script id="data" type="application/json">{"plan":{"seats18":[[-151.6,113.8,"linke"],[-145.4,136.4,"linke"],[-123.0,177.4,"spd"],[-107.4,194.9,"spd"],[-89.3,209.7,"spd"],[-69.2,221.7,"spd"],[-47.4,230.4,"spd"],[-1.2,237.6,"gruene"],[22.1,235.8,"gruene"],[66.7,221.7,"cducsu"],[86.8,209.7,"cducsu"],[104.9,194.8,"cducsu"],[120.5,177.3,"cducsu"],[133.2,157.6,"cducsu"],[142.8,136.2,"cducsu"],[149.0,113.7,"cducsu"],[-201.9,107.8,"linke"],[-197.6,131.9,"linke"],[-180.3,177.8,"spd"],[-167.7,198.8,"spd"],[-152.6,218.1,"spd"],[-135.3,235.5,"spd"],[-115.9,250.6,"spd"],[-94.9,263.3,"spd"],[-25.0,284.9,"gruene"],[-0.5,286.3,"gruene"],[48.1,280.2,"cducsu"],[71.5,272.7,"cducsu"],[93.8,262.5,"cducsu"],[114.7,249.7,"cducsu"],[133.9,234.4,"cducsu"],[151.1,216.9,"cducsu"],[166.0,197.4,"cducsu"],[178.5,176.3,"cducsu"],[188.3,153.8,"cducsu"],[195.3,130.3,"cducsu"],[-250.4,110.8,"linke"],[-246.8,134.2,"linke"],[-241.0,157.1,"linke"],[-223.1,200.9,"spd"],[-211.1,221.3,"spd"],[-197.2,240.5,"spd"],[-181.6,258.3,"spd"],[-164.4,274.6,"spd"],[-145.7,289.1,"spd"],[-125.8,301.8,"spd"],[-104.7,312.6,"spd"],[-82.7,321.3,"spd"],[-36.7,332.4,"gruene"],[-13.1,334.6,"gruene"],[57.4,328.0,"cducsu"],[80.1,321.3,"cducsu"],[102.1,312.6,"cducsu"],[123.2,301.8,"cducsu"],[143.1,289.1,"cducsu"],[161.8,274.5,"cducsu"],[179.0,258.3,"cducsu"],[194.7,240.5,"cducsu"],[208.5,221.3,"cducsu"],[220.5,200.9,"cducsu"],[230.5,179.4,"cducsu"],[238.4,157.1,"cducsu"],[244.2,134.2,"cducsu"],[247.8,110.8,"cducsu"],[-301.2,92.2,"linke"],[-299.6,115.8,"linke"],[-296.2,139.3,"linke"],[-275.0,207.0,"spd"],[-264.5,228.3,"spd"],[-252.3,248.6,"spd"],[-238.6,267.9,"spd"],[-223.3,286.1,"spd"],[-206.7,303.0,"spd"],[-188.8,318.5,"spd"],[-169.8,332.6,"spd"],[-149.6,345.1,"spd"],[-128.6,356.0,"spd"],[-84.2,372.7,"gruene"],[-61.2,378.3,"gruene"],[-37.8,382.1,"gruene"],[-14.2,384.1,"gruene"],[56.6,378.7,"cducsu"],[79.6,373.2,"cducsu"],[102.2,365.9,"cducsu"],[124.1,356.9,"cducsu"],[145.2,346.1,"cducsu"],[165.4,333.8,"cducsu"],[202.6,304.4,"cducsu"],[219.3,287.6,"cducsu"],[234.7,269.6,"cducsu"],[248.6,250.3,"cducsu"],[260.9,230.1,"cducsu"],[280.6,187.0,"cducsu"],[287.8,164.4,"cducsu"],[293.2,141.3,"cducsu"],[296.8,117.9,"cducsu"],[298.5,94.3,"cducsu"],[-350.6,74.4,"linke"],[-350.4,98.1,"linke"],[-348.7,121.8,"linke"],[-345.3,145.3,"linke"],[-325.9,213.7,"spd"],[-316.3,235.5,"spd"],[-305.3,256.5,"spd"],[-293.0,276.8,"spd"],[-279.2,296.2,"spd"],[-264.2,314.5,"spd"],[-248.0,331.9,"spd"],[-230.6,348.0,"spd"],[-212.1,363.0,"spd"],[-192.7,376.7,"spd"],[-172.4,389.0,"spd"],[-151.3,399.9,"spd"],[-84.3,423.8,"gruene"],[-61.1,428.6,"gruene"],[-37.6,431.9,"gruene"],[-13.9,433.6,"gruene"],[57.1,428.9,"cducsu"],[80.3,424.1,"cducsu"],[103.2,417.8,"cducsu"],[125.6,409.9,"cducsu"],[147.5,400.5,"cducsu"],[168.6,389.7,"cducsu"],[188.9,377.5,"cducsu"],[226.9,349.0,"cducsu"],[244.3,332.9,"cducsu"],[260.6,315.6,"cducsu"],[275.7,297.3,"cducsu"],[289.6,278.0,"cducsu"],[302.0,257.8,"cducsu"],[313.1,236.8,"cducsu"],[330.9,192.8,"cducsu"],[337.5,169.9,"cducsu"],[342.5,146.7,"cducsu"],[345.9,123.2,"cducsu"],[347.8,99.6,"cducsu"],[348.0,75.8,"cducsu"],[-399.6,58.3,"linke"],[-400.4,82.0,"linke"],[-399.8,105.8,"linke"],[-397.9,129.5,"linke"],[-394.5,153.0,"linke"],[-376.0,221.7,"spd"],[-367.2,243.8,"spd"],[-357.1,265.3,"spd"],[-345.7,286.1,"spd"],[-333.1,306.2,"spd"],[-319.3,325.6,"spd"],[-304.4,344.1,"spd"],[-288.4,361.6,"spd"],[-271.4,378.2,"spd"],[-253.4,393.8,"spd"],[-234.6,408.2,"spd"],[-214.9,421.5,"spd"],[-194.5,433.6,"spd"],[-173.3,444.5,"spd"],[-151.6,454.1,"spd"],[-106.6,469.4,"gruene"],[-83.6,474.9,"gruene"],[-60.2,479.1,"gruene"],[-36.6,481.9,"gruene"],[-12.9,483.3,"gruene"],[58.2,479.0,"cducsu"],[81.6,474.8,"cducsu"],[104.6,469.2,"cducsu"],[127.3,462.2,"cducsu"],[149.6,453.9,"cducsu"],[171.3,444.3,"cducsu"],[192.4,433.3,"cducsu"],[212.8,421.2,"cducsu"],[251.3,393.4,"cducsu"],[269.2,377.8,"cducsu"],[286.2,361.2,"cducsu"],[302.2,343.6,"cducsu"],[317.1,325.1,"cducsu"],[330.8,305.7,"cducsu"],[343.4,285.6,"cducsu"],[354.8,264.7,"cducsu"],[364.9,243.2,"cducsu"],[381.1,198.6,"cducsu"],[387.2,175.6,"cducsu"],[392.0,152.4,"cducsu"],[395.3,128.8,"cducsu"],[397.3,105.2,"cducsu"],[397.8,81.4,"cducsu"],[396.9,57.7,"cducsu"],[-457.3,25.7,"linke"],[-459.4,46.4,"linke"],[-460.7,67.1,"linke"],[-461.0,88.0,"linke"],[-460.4,108.8,"linke"],[-458.8,129.5,"linke"],[-456.3,150.2,"linke"],[-443.2,211.2,"spd"],[-437.0,231.1,"spd"],[-429.9,250.6,"spd"],[-421.9,269.9,"spd"],[-413.1,288.7,"spd"],[-403.4,307.2,"spd"],[-392.9,325.1,"spd"],[-381.6,342.6,"spd"],[-369.6,359.6,"spd"],[-356.7,376.0,"spd"],[-343.2,391.8,"spd"],[-328.9,406.9,"spd"],[-314.0,421.4,"spd"],[-298.4,435.2,"spd"],[-282.2,448.3,"spd"],[-265.5,460.7,"spd"],[-248.1,472.2,"spd"],[-230.3,483.0,"spd"],[-212.1,493.0,"spd"],[-193.3,502.1,"spd"],[-174.2,510.4,"spd"],[-115.0,529.8,"gruene"],[-94.7,534.5,"gruene"],[-74.2,538.3,"gruene"],[-53.6,541.1,"gruene"],[-32.9,543.0,"gruene"],[-12.1,544.0,"gruene"],[8.8,544.0,"gruene"],[70.9,538.4,"cducsu"],[91.4,534.7,"cducsu"],[111.7,530.0,"cducsu"],[131.7,524.5,"cducsu"],[151.5,518.0,"cducsu"],[171.0,510.6,"cducsu"],[190.1,502.4,"cducsu"],[208.8,493.3,"cducsu"],[227.1,483.4,"cducsu"],[244.9,472.6,"cducsu"],[262.3,461.1,"cducsu"],[279.0,448.7,"cducsu"],[295.3,435.7,"cducsu"],[310.9,421.9,"cducsu"],[325.8,407.4,"cducsu"],[340.1,392.3,"cducsu"],[353.7,376.5,"cducsu"],[366.5,360.1,"cducsu"],[378.6,343.2,"cducsu"],[390.0,325.7,"cducsu"],[400.5,307.8,"cducsu"],[410.2,289.4,"cducsu"],[419.1,270.5,"cducsu"],[427.1,251.3,"cducsu"],[434.2,231.8,"cducsu"],[440.4,211.9,"cducsu"],[445.7,191.8,"cducsu"],[450.1,171.4,"cducsu"],[453.6,150.9,"cducsu"],[456.1,130.2,"cducsu"],[457.7,109.5,"cducsu"],[458.4,88.7,"cducsu"],[458.1,67.9,"cducsu"],[456.9,47.1,"cducsu"],[454.7,26.4,"cducsu"],[-493.6,13.2,"linke"],[-496.2,34.1,"linke"],[-497.9,55.1,"linke"],[-498.7,76.1,"linke"],[-498.6,97.2,"linke"],[-497.6,118.2,"linke"],[-495.7,139.2,"linke"],[-492.9,160.1,"linke"],[-479.4,221.8,"spd"],[-473.1,241.9,"spd"],[-466.0,261.8,"spd"],[-458.1,281.3,"spd"],[-449.4,300.5,"spd"],[-439.8,319.2,"spd"],[-429.5,337.6,"spd"],[-418.4,355.5,"spd"],[-406.5,372.9,"spd"],[-393.9,389.8,"spd"],[-380.6,406.2,"spd"],[-366.7,421.9,"spd"],[-352.1,437.1,"spd"],[-336.8,451.7,"spd"],[-321.0,465.5,"spd"],[-304.5,478.7,"spd"],[-287.6,491.2,"spd"],[-270.1,503.0,"spd"],[-252.1,514.0,"spd"],[-233.7,524.2,"spd"],[-214.9,533.7,"spd"],[-195.6,542.3,"spd"],[-176.1,550.1,"spd"],[-115.6,568.5,"gruene"],[-95.0,572.9,"gruene"],[-74.3,576.5,"gruene"],[-53.4,579.1,"gruene"],[-32.4,580.9,"gruene"],[-11.3,581.7,"gruene"],[9.7,581.7,"gruene"],[72.7,576.3,"cducsu"],[93.5,572.7,"cducsu"],[114.0,568.3,"cducsu"],[134.4,563.0,"cducsu"],[154.6,556.8,"cducsu"],[174.4,549.8,"cducsu"],[194.0,541.9,"cducsu"],[213.2,533.2,"cducsu"],[232.0,523.7,"cducsu"],[250.4,513.5,"cducsu"],[268.3,502.4,"cducsu"],[285.8,490.6,"cducsu"],[302.7,478.1,"cducsu"],[319.1,464.9,"cducsu"],[335.0,451.0,"cducsu"],[350.2,436.4,"cducsu"],[364.8,421.2,"cducsu"],[378.7,405.4,"cducsu"],[392.0,389.0,"cducsu"],[404.5,372.1,"cducsu"],[416.3,354.6,"cducsu"],[427.4,336.7,"cducsu"],[437.7,318.3,"cducsu"],[447.2,299.5,"cducsu"],[455.9,280.3,"cducsu"],[463.8,260.8,"cducsu"],[470.9,241.0,"cducsu"],[477.1,220.8,"cducsu"],[482.4,200.4,"cducsu"],[486.9,179.9,"cducsu"],[490.5,159.1,"cducsu"],[493.2,138.2,"cducsu"],[495.1,117.2,"cducsu"],[496.0,96.2,"cducsu"],[496.0,75.1,"cducsu"],[495.2,54.0,"cducsu"],[493.5,33.0,"cducsu"],[490.9,12.1,"cducsu"],[-529.7,1.1,"linke"],[-532.6,21.7,"linke"],[-534.6,42.4,"linke"],[-535.8,63.1,"linke"],[-536.3,83.9,"linke"],[-535.9,104.6,"linke"],[-534.7,125.4,"linke"],[-532.7,146.1,"linke"],[-521.9,207.4,"spd"],[-516.8,227.5,"spd"],[-510.8,247.4,"spd"],[-504.1,267.1,"spd"],[-496.6,286.5,"spd"],[-488.4,305.5,"spd"],[-479.5,324.3,"spd"],[-469.8,342.6,"spd"],[-459.4,360.6,"spd"],[-448.4,378.2,"spd"],[-436.6,395.3,"spd"],[-424.2,412.0,"spd"],[-411.2,428.2,"spd"],[-397.5,443.8,"spd"],[-383.3,458.9,"spd"],[-368.5,473.5,"spd"],[-353.1,487.4,"spd"],[-337.2,500.8,"spd"],[-320.7,513.5,"spd"],[-303.8,525.6,"spd"],[-286.5,537.0,"spd"],[-268.7,547.7,"spd"],[-250.5,557.8,"spd"],[-232.0,567.1,"spd"],[-213.1,575.7,"spd"],[-193.8,583.5,"spd"],[-134.5,602.5,"gruene"],[-114.3,607.3,"gruene"],[-93.9,611.3,"gruene"],[-73.4,614.5,"gruene"],[-52.8,616.9,"gruene"],[-32.1,618.5,"gruene"],[-11.3,619.3,"gruene"],[9.5,619.3,"gruene"],[71.6,614.4,"cducsu"],[92.1,611.2,"cducsu"],[112.5,607.1,"cducsu"],[132.7,602.3,"cducsu"],[152.7,596.7,"cducsu"],[172.4,590.4,"cducsu"],[191.9,583.2,"cducsu"],[211.2,575.4,"cducsu"],[230.1,566.8,"cducsu"],[248.6,557.4,"cducsu"],[266.8,547.4,"cducsu"],[284.5,536.6,"cducsu"],[301.9,525.2,"cducsu"],[318.8,513.1,"cducsu"],[335.2,500.3,"cducsu"],[351.1,486.9,"cducsu"],[366.4,473.0,"cducsu"],[381.2,458.4,"cducsu"],[395.5,443.3,"cducsu"],[409.1,427.6,"cducsu"],[422.1,411.4,"cducsu"],[434.5,394.7,"cducsu"],[446.2,377.6,"cducsu"],[457.2,360.0,"cducsu"],[467.6,342.0,"cducsu"],[477.2,323.6,"cducsu"],[486.1,304.8,"cducsu"],[494.3,285.7,"cducsu"],[501.8,266.3,"cducsu"],[508.5,246.7,"cducsu"],[514.4,226.8,"cducsu"],[519.5,206.6,"cducsu"],[523.9,186.3,"cducsu"],[527.4,165.9,"cducsu"],[530.2,145.3,"cducsu"],[532.2,124.6,"cducsu"],[533.3,103.9,"cducsu"],[533.7,83.1,"cducsu"],[533.2,62.3,"cducsu"],[532.0,41.6,"cducsu"],[529.9,20.9,"cducsu"],[527.0,0.4,"cducsu"],[-565.4,-14.4,"linke"],[-568.6,6.4,"linke"],[-571.1,27.3,"linke"],[-572.8,48.2,"linke"],[-573.7,69.2,"linke"],[-573.9,90.2,"linke"],[-573.3,111.2,"linke"],[-571.9,132.2,"linke"],[-569.8,153.1,"linke"],[-558.8,215.1,"spd"],[-553.6,235.5,"spd"],[-547.7,255.7,"spd"],[-541.1,275.6,"spd"],[-533.7,295.3,"spd"],[-525.6,314.7,"spd"],[-516.8,333.7,"spd"],[-507.3,352.5,"spd"],[-497.1,370.9,"spd"],[-486.3,388.9,"spd"],[-474.8,406.5,"spd"],[-462.7,423.6,"spd"],[-449.9,440.3,"spd"],[-436.5,456.5,"spd"],[-422.6,472.3,"spd"],[-408.1,487.4,"spd"],[-393.0,502.1,"spd"],[-377.4,516.2,"spd"],[-361.3,529.7,"spd"],[-344.8,542.6,"spd"],[-327.7,554.9,"spd"],[-310.2,566.6,"spd"],[-292.3,577.6,"spd"],[-274.0,587.9,"spd"],[-255.4,597.6,"spd"],[-236.4,606.6,"spd"],[-217.1,614.8,"spd"],[-197.5,622.4,"spd"],[-137.2,640.7,"gruene"],[-116.7,645.3,"gruene"],[-96.0,649.2,"gruene"],[-75.2,652.2,"gruene"],[-54.3,654.6,"gruene"],[-33.4,656.1,"gruene"],[-12.4,656.9,"gruene"],[8.6,657.0,"gruene"],[29.6,656.2,"gruene"],[92.3,649.3,"cducsu"],[112.9,645.5,"cducsu"],[133.4,641.0,"cducsu"],[153.8,635.6,"cducsu"],[173.9,629.6,"cducsu"],[193.8,622.8,"cducsu"],[213.4,615.3,"cducsu"],[232.7,607.0,"cducsu"],[251.7,598.1,"cducsu"],[270.4,588.5,"cducsu"],[288.7,578.2,"cducsu"],[306.7,567.2,"cducsu"],[324.2,555.6,"cducsu"],[341.2,543.3,"cducsu"],[357.8,530.4,"cducsu"],[374.0,517.0,"cducsu"],[389.6,502.9,"cducsu"],[404.7,488.3,"cducsu"],[419.2,473.1,"cducsu"],[433.2,457.4,"cducsu"],[446.6,441.2,"cducsu"],[459.4,424.6,"cducsu"],[471.5,407.4,"cducsu"],[483.1,389.9,"cducsu"],[494.0,371.9,"cducsu"],[504.2,353.5,"cducsu"],[513.7,334.8,"cducsu"],[522.5,315.7,"cducsu"],[530.7,296.4,"cducsu"],[538.1,276.7,"cducsu"],[544.8,256.8,"cducsu"],[550.7,236.6,"cducsu"],[556.0,216.3,"cducsu"],[560.4,195.7,"cducsu"],[564.1,175.0,"cducsu"],[567.1,154.2,"cducsu"],[569.2,133.3,"cducsu"],[570.7,112.4,"cducsu"],[571.3,91.4,"cducsu"],[571.2,70.4,"cducsu"],[570.3,49.4,"cducsu"],[568.6,28.4,"cducsu"],[566.2,7.5,"cducsu"],[563.0,-13.2,"cducsu"],[-602.6,-25.6,"linke"],[-606.0,-5.1,"linke"],[-608.7,15.6,"linke"],[-610.7,36.3,"linke"],[-612.0,57.0,"linke"],[-612.6,77.8,"linke"],[-612.4,98.6,"linke"],[-611.6,119.3,"linke"],[-610.1,140.1,"linke"],[-607.8,160.7,"linke"],[-596.9,222.1,"spd"],[-591.9,242.3,"spd"],[-586.2,262.3,"spd"],[-579.8,282.1,"spd"],[-572.7,301.6,"spd"],[-565.0,320.9,"spd"],[-556.6,340.0,"spd"],[-547.6,358.7,"spd"],[-538.0,377.1,"spd"],[-527.7,395.2,"spd"],[-516.8,412.9,"spd"],[-505.4,430.3,"spd"],[-493.3,447.2,"spd"],[-480.7,463.7,"spd"],[-467.5,479.8,"spd"],[-453.8,495.4,"spd"],[-439.6,510.6,"spd"],[-424.8,525.2,"spd"],[-409.6,539.4,"spd"],[-393.9,553.0,"spd"],[-377.7,566.1,"spd"],[-361.1,578.6,"spd"],[-344.1,590.6,"spd"],[-326.7,601.9,"spd"],[-308.9,612.7,"spd"],[-290.8,622.8,"spd"],[-272.3,632.4,"spd"],[-253.5,641.3,"spd"],[-234.4,649.5,"spd"],[-215.1,657.1,"spd"],[-155.6,675.9,"gruene"],[-135.4,680.8,"gruene"],[-115.1,685.0,"gruene"],[-94.6,688.6,"gruene"],[-74.0,691.4,"gruene"],[-53.3,693.5,"gruene"],[-32.5,694.9,"gruene"],[-11.8,695.6,"gruene"],[9.0,695.6,"gruene"],[29.8,694.9,"gruene"],[91.8,688.6,"cducsu"],[112.3,685.1,"cducsu"],[132.7,680.8,"cducsu"],[152.9,675.9,"cducsu"],[172.9,670.4,"cducsu"],[192.7,664.1,"cducsu"],[212.3,657.2,"cducsu"],[231.7,649.6,"cducsu"],[250.8,641.3,"cducsu"],[269.6,632.4,"cducsu"],[288.0,622.9,"cducsu"],[306.2,612.8,"cducsu"],[324.0,602.0,"cducsu"],[341.4,590.6,"cducsu"],[358.4,578.7,"cducsu"],[375.0,566.2,"cducsu"],[391.2,553.1,"cducsu"],[406.9,539.5,"cducsu"],[422.1,525.3,"cducsu"],[436.9,510.7,"cducsu"],[451.1,495.5,"cducsu"],[464.8,479.9,"cducsu"],[478.0,463.8,"cducsu"],[490.6,447.3,"cducsu"],[502.7,430.4,"cducsu"],[514.2,413.0,"cducsu"],[525.0,395.3,"cducsu"],[535.3,377.3,"cducsu"],[544.9,358.8,"cducsu"],[554.0,340.1,"cducsu"],[562.3,321.1,"cducsu"],[570.1,301.8,"cducsu"],[577.1,282.2,"cducsu"],[583.5,262.4,"cducsu"],[589.2,242.4,"cducsu"],[594.3,222.3,"cducsu"],[598.6,201.9,"cducsu"],[602.3,181.5,"cducsu"],[605.2,160.9,"cducsu"],[607.5,140.2,"cducsu"],[609.0,119.5,"cducsu"],[609.8,98.7,"cducsu"],[610.0,77.9,"cducsu"],[609.4,57.1,"cducsu"],[608.1,36.4,"cducsu"],[606.1,15.7,"cducsu"],[603.5,-4.9,"cducsu"],[600.1,-25.4,"cducsu"],[-643.4,-8.9,"linke"],[-649.7,60.3,"linke"],[-648.6,129.8,"linke"],[-601.0,332.1,"spd"],[-571.1,394.8,"spd"],[-534.6,454.0,"spd"],[-492.0,508.9,"spd"],[-443.8,559.0,"spd"],[-390.5,603.6,"spd"],[-332.7,642.2,"spd"],[-271.1,674.5,"spd"],[-70.8,729.5,"gruene"],[-1.4,733.3,"gruene"],[68.0,729.5,"gruene"],[268.4,674.6,"cducsu"],[330.0,642.3,"cducsu"],[387.7,603.7,"cducsu"],[441.1,559.1,"cducsu"],[489.3,509.0,"cducsu"],[531.9,454.1,"cducsu"],[568.4,394.9,"cducsu"],[598.4,332.2,"cducsu"],[621.4,266.6,"cducsu"],[637.4,199.0,"cducsu"],[646.0,130.0,"cducsu"],[647.1,60.5,"cducsu"],[640.8,-8.7,"cducsu"]],"seats19":[[-151.6,113.8,"linke"],[-135.8,157.7,"spd"],[-123.0,177.4,"spd"],[-107.4,194.9,"spd"],[-69.2,221.7,"gruene"],[-24.6,235.8,"cducsu"],[-1.2,237.6,"cducsu"],[22.1,235.8,"cducsu"],[44.9,230.4,"cducsu"],[66.7,221.7,"cducsu"],[104.9,194.8,"fdp"],[120.5,177.3,"fdp"],[142.8,136.2,"afd"],[149.0,113.7,"afd"],[-201.9,107.8,"linke"],[-197.6,131.9,"linke"],[-180.3,177.8,"spd"],[-167.7,198.8,"spd"],[-152.6,218.1,"spd"],[-135.3,235.5,"spd"],[-94.9,263.3,"gruene"],[-72.5,273.3,"gruene"],[-25.0,284.9,"cducsu"],[-0.5,286.3,"cducsu"],[24.0,284.7,"cducsu"],[48.1,280.2,"cducsu"],[71.5,272.7,"cducsu"],[93.8,262.5,"cducsu"],[114.7,249.7,"cducsu"],[151.1,216.9,"fdp"],[166.0,197.4,"fdp"],[188.3,153.8,"afd"],[195.3,130.3,"afd"],[-250.4,110.8,"linke"],[-246.8,134.2,"linke"],[-241.0,157.1,"linke"],[-223.1,200.9,"spd"],[-211.1,221.3,"spd"],[-197.2,240.5,"spd"],[-181.6,258.3,"spd"],[-164.4,274.6,"spd"],[-145.7,289.1,"spd"],[-104.7,312.6,"gruene"],[-82.7,321.3,"gruene"],[-60.0,328.0,"gruene"],[-13.1,334.6,"cducsu"],[10.5,334.6,"cducsu"],[34.1,332.4,"cducsu"],[57.4,328.0,"cducsu"],[80.1,321.3,"cducsu"],[102.1,312.6,"cducsu"],[123.2,301.8,"cducsu"],[143.1,289.1,"cducsu"],[179.0,258.3,"fdp"],[194.7,240.5,"fdp"],[208.5,221.3,"fdp"],[230.5,179.4,"afd"],[238.4,157.1,"afd"],[244.2,134.2,"afd"],[247.8,110.8,"afd"],[-301.2,92.2,"linke"],[-299.6,115.8,"linke"],[-296.2,139.3,"linke"],[-275.0,207.0,"spd"],[-264.5,228.3,"spd"],[-252.3,248.6,"spd"],[-238.6,267.9,"spd"],[-223.3,286.1,"spd"],[-206.7,303.0,"spd"],[-188.8,318.5,"spd"],[-149.6,345.1,"gruene"],[-128.6,356.0,"gruene"],[-106.7,365.2,"gruene"],[-37.8,382.1,"cducsu"],[-14.2,384.1,"cducsu"],[9.5,384.2,"cducsu"],[33.1,382.4,"cducsu"],[56.6,378.7,"cducsu"],[79.6,373.2,"cducsu"],[102.2,365.9,"cducsu"],[124.1,356.9,"cducsu"],[145.2,346.1,"cducsu"],[165.4,333.8,"cducsu"],[184.6,319.8,"cducsu"],[202.6,304.4,"cducsu"],[234.7,269.6,"fdp"],[248.6,250.3,"fdp"],[260.9,230.1,"fdp"],[271.6,208.9,"fdp"],[287.8,164.4,"afd"],[293.2,141.3,"afd"],[296.8,117.9,"afd"],[298.5,94.3,"afd"],[-350.6,74.4,"linke"],[-350.4,98.1,"linke"],[-348.7,121.8,"linke"],[-345.3,145.3,"linke"],[-333.9,191.4,"spd"],[-325.9,213.7,"spd"],[-316.3,235.5,"spd"],[-305.3,256.5,"spd"],[-293.0,276.8,"spd"],[-279.2,296.2,"spd"],[-264.2,314.5,"spd"],[-248.0,331.9,"spd"],[-230.6,348.0,"spd"],[-192.7,376.7,"gruene"],[-172.4,389.0,"gruene"],[-151.3,399.9,"gruene"],[-129.6,409.4,"gruene"],[-61.1,428.6,"cducsu"],[-37.6,431.9,"cducsu"],[-13.9,433.6,"cducsu"],[9.9,433.6,"cducsu"],[33.6,432.1,"cducsu"],[57.1,428.9,"cducsu"],[80.3,424.1,"cducsu"],[103.2,417.8,"cducsu"],[125.6,409.9,"cducsu"],[147.5,400.5,"cducsu"],[168.6,389.7,"cducsu"],[188.9,377.5,"cducsu"],[208.4,363.9,"cducsu"],[226.9,349.0,"cducsu"],[244.3,332.9,"cducsu"],[275.7,297.3,"fdp"],[289.6,278.0,"fdp"],[302.0,257.8,"fdp"],[313.1,236.8,"fdp"],[330.9,192.8,"afd"],[337.5,169.9,"afd"],[342.5,146.7,"afd"],[345.9,123.2,"afd"],[347.8,99.6,"afd"],[348.0,75.8,"afd"],[-399.6,58.3,"linke"],[-400.4,82.0,"linke"],[-399.8,105.8,"linke"],[-397.9,129.5,"linke"],[-394.5,153.0,"linke"],[-383.5,199.2,"spd"],[-376.0,221.7,"spd"],[-367.2,243.8,"spd"],[-357.1,265.3,"spd"],[-345.7,286.1,"spd"],[-333.1,306.2,"spd"],[-319.3,325.6,"spd"],[-304.4,344.1,"spd"],[-288.4,361.6,"spd"],[-271.4,378.2,"spd"],[-253.4,393.8,"spd"],[-214.9,421.5,"gruene"],[-194.5,433.6,"gruene"],[-173.3,444.5,"gruene"],[-151.6,454.1,"gruene"],[-129.4,462.4,"gruene"],[-60.2,479.1,"cducsu"],[-36.6,481.9,"cducsu"],[-12.9,483.3,"cducsu"],[10.9,483.3,"cducsu"],[34.6,481.9,"cducsu"],[58.2,479.0,"cducsu"],[81.6,474.8,"cducsu"],[104.6,469.2,"cducsu"],[127.3,462.2,"cducsu"],[149.6,453.9,"cducsu"],[171.3,444.3,"cducsu"],[192.4,433.3,"cducsu"],[212.8,421.2,"cducsu"],[232.5,407.9,"cducsu"],[251.3,393.4,"cducsu"],[269.2,377.8,"cducsu"],[286.2,361.2,"cducsu"],[317.1,325.1,"fdp"],[330.8,305.7,"fdp"],[343.4,285.6,"fdp"],[354.8,264.7,"fdp"],[364.9,243.2,"fdp"],[373.6,221.1,"fdp"],[387.2,175.6,"afd"],[392.0,152.4,"afd"],[395.3,128.8,"afd"],[397.3,105.2,"afd"],[397.8,81.4,"afd"],[396.9,57.7,"afd"],[-457.3,26.0,"linke"],[-459.5,47.2,"linke"],[-460.7,68.6,"linke"],[-461.0,89.9,"linke"],[-460.2,111.3,"linke"],[-458.5,132.6,"linke"],[-455.8,153.8,"linke"],[-441.7,216.3,"spd"],[-435.1,236.7,"spd"],[-427.5,256.7,"spd"],[-419.1,276.3,"spd"],[-409.7,295.5,"spd"],[-399.4,314.3,"spd"],[-388.3,332.5,"spd"],[-376.4,350.3,"spd"],[-363.6,367.4,"spd"],[-350.0,383.9,"spd"],[-335.7,399.8,"spd"],[-320.7,415.0,"spd"],[-305.0,429.5,"spd"],[-288.6,443.3,"spd"],[-271.6,456.2,"spd"],[-217.3,490.2,"gruene"],[-198.2,499.8,"gruene"],[-178.7,508.5,"gruene"],[-158.8,516.3,"gruene"],[-138.5,523.2,"gruene"],[-76.2,538.0,"cducsu"],[-55.0,541.0,"cducsu"],[-33.7,543.0,"cducsu"],[-12.3,544.0,"cducsu"],[9.0,544.0,"cducsu"],[30.4,543.0,"cducsu"],[51.7,541.1,"cducsu"],[72.8,538.1,"cducsu"],[93.9,534.2,"cducsu"],[114.7,529.3,"cducsu"],[135.2,523.4,"cducsu"],[155.5,516.6,"cducsu"],[175.4,508.8,"cducsu"],[194.9,500.1,"cducsu"],[214.1,490.6,"cducsu"],[232.7,480.1,"cducsu"],[250.9,468.8,"cducsu"],[268.5,456.7,"cducsu"],[285.5,443.7,"cducsu"],[301.9,430.0,"cducsu"],[317.6,415.5,"cducsu"],[360.6,368.0,"fdp"],[373.3,350.8,"fdp"],[385.3,333.1,"fdp"],[396.5,314.9,"fdp"],[406.8,296.1,"fdp"],[416.2,276.9,"fdp"],[424.7,257.3,"fdp"],[432.2,237.3,"fdp"],[449.3,175.6,"afd"],[453.0,154.5,"afd"],[455.8,133.3,"afd"],[457.6,112.0,"afd"],[458.4,90.6,"afd"],[458.2,69.3,"afd"],[457.0,47.9,"afd"],[454.8,26.7,"afd"],[-493.6,13.0,"linke"],[-496.1,33.7,"linke"],[-497.8,54.4,"linke"],[-498.7,75.2,"linke"],[-498.6,96.0,"linke"],[-497.7,116.8,"linke"],[-495.9,137.6,"linke"],[-485.3,199.1,"spd"],[-480.1,219.2,"spd"],[-474.0,239.2,"spd"],[-467.2,258.8,"spd"],[-459.5,278.1,"spd"],[-451.0,297.1,"spd"],[-441.7,315.8,"spd"],[-431.6,334.0,"spd"],[-420.8,351.8,"spd"],[-409.2,369.1,"spd"],[-397.0,385.9,"spd"],[-384.0,402.2,"spd"],[-370.4,417.9,"spd"],[-356.1,433.1,"spd"],[-341.2,447.6,"spd"],[-325.7,461.5,"spd"],[-275.9,499.2,"gruene"],[-258.3,510.3,"gruene"],[-240.3,520.7,"gruene"],[-221.8,530.3,"gruene"],[-203.0,539.1,"gruene"],[-183.8,547.2,"gruene"],[-164.3,554.4,"gruene"],[-104.1,571.1,"cducsu"],[-83.7,575.0,"cducsu"],[-63.1,578.0,"cducsu"],[-42.4,580.1,"cducsu"],[-21.6,581.4,"cducsu"],[-0.8,581.8,"cducsu"],[20.0,581.4,"cducsu"],[40.8,580.1,"cducsu"],[61.5,577.9,"cducsu"],[82.1,574.8,"cducsu"],[102.5,570.9,"cducsu"],[122.8,566.1,"cducsu"],[142.8,560.5,"cducsu"],[162.6,554.0,"cducsu"],[182.1,546.8,"cducsu"],[201.3,538.7,"cducsu"],[220.1,529.8,"cducsu"],[238.6,520.2,"cducsu"],[256.6,509.8,"cducsu"],[274.2,498.6,"cducsu"],[291.3,486.7,"cducsu"],[307.8,474.1,"cducsu"],[323.9,460.8,"cducsu"],[339.3,446.9,"cducsu"],[354.2,432.3,"cducsu"],[395.0,385.1,"fdp"],[407.2,368.2,"fdp"],[418.7,350.9,"fdp"],[429.5,333.1,"fdp"],[439.5,314.9,"fdp"],[448.8,296.2,"fdp"],[457.3,277.2,"fdp"],[464.9,257.8,"fdp"],[483.0,198.1,"afd"],[487.3,177.7,"afd"],[490.8,157.2,"afd"],[493.4,136.6,"afd"],[495.1,115.8,"afd"],[496.0,95.0,"afd"],[496.0,74.2,"afd"],[495.2,53.4,"afd"],[493.4,32.7,"afd"],[490.8,12.0,"afd"],[-529.7,1.0,"linke"],[-532.5,21.4,"linke"],[-534.6,41.8,"linke"],[-535.8,62.3,"linke"],[-536.3,82.9,"linke"],[-535.9,103.4,"linke"],[-534.8,123.9,"linke"],[-532.9,144.4,"linke"],[-522.5,205.1,"spd"],[-517.5,225.0,"spd"],[-511.7,244.7,"spd"],[-505.2,264.2,"spd"],[-497.9,283.4,"spd"],[-489.9,302.3,"spd"],[-481.2,320.9,"spd"],[-471.7,339.1,"spd"],[-461.6,357.0,"spd"],[-450.8,374.5,"spd"],[-439.3,391.5,"spd"],[-427.2,408.1,"spd"],[-414.5,424.2,"spd"],[-401.1,439.8,"spd"],[-387.2,454.9,"spd"],[-372.7,469.5,"spd"],[-357.6,483.4,"spd"],[-309.4,521.8,"gruene"],[-292.4,533.3,"gruene"],[-274.9,544.1,"gruene"],[-257.1,554.3,"gruene"],[-238.8,563.7,"gruene"],[-220.3,572.5,"gruene"],[-201.4,580.6,"gruene"],[-182.2,587.9,"gruene"],[-123.1,605.3,"cducsu"],[-103.0,609.6,"cducsu"],[-82.8,613.1,"cducsu"],[-62.4,615.9,"cducsu"],[-42.0,617.8,"cducsu"],[-21.5,619.0,"cducsu"],[-0.9,619.4,"cducsu"],[19.6,619.0,"cducsu"],[40.1,617.8,"cducsu"],[60.6,615.8,"cducsu"],[80.9,613.0,"cducsu"],[101.2,609.5,"cducsu"],[121.2,605.1,"cducsu"],[141.1,600.1,"cducsu"],[160.8,594.2,"cducsu"],[180.3,587.6,"cducsu"],[199.5,580.3,"cducsu"],[218.4,572.2,"cducsu"],[236.9,563.4,"cducsu"],[255.1,553.9,"cducsu"],[273.0,543.7,"cducsu"],[290.4,532.8,"cducsu"],[307.4,521.3,"cducsu"],[324.0,509.1,"cducsu"],[340.0,496.3,"cducsu"],[355.6,482.9,"cducsu"],[370.6,468.9,"cducsu"],[385.1,454.4,"cducsu"],[425.1,407.5,"fdp"],[437.2,390.9,"fdp"],[448.6,373.8,"fdp"],[459.4,356.4,"fdp"],[469.5,338.5,"fdp"],[478.9,320.2,"fdp"],[487.6,301.6,"fdp"],[495.6,282.7,"fdp"],[502.8,263.4,"fdp"],[520.1,204.3,"afd"],[524.3,184.2,"afd"],[527.7,164.0,"afd"],[530.4,143.6,"afd"],[532.3,123.1,"afd"],[533.4,102.6,"afd"],[533.7,82.1,"afd"],[533.2,61.5,"afd"],[531.9,41.0,"afd"],[529.9,20.6,"afd"],[527.0,0.3,"afd"],[-565.4,-14.3,"linke"],[-568.6,6.7,"linke"],[-571.1,27.8,"linke"],[-572.8,49.0,"linke"],[-573.8,70.2,"linke"],[-573.9,91.4,"linke"],[-573.2,112.7,"linke"],[-571.8,133.8,"linke"],[-562.8,196.9,"spd"],[-558.2,217.6,"spd"],[-552.9,238.2,"spd"],[-546.8,258.5,"spd"],[-540.0,278.6,"spd"],[-532.4,298.5,"spd"],[-524.1,318.0,"spd"],[-515.1,337.2,"spd"],[-505.4,356.1,"spd"],[-495.0,374.6,"spd"],[-483.9,392.7,"spd"],[-472.1,410.4,"spd"],[-459.7,427.6,"spd"],[-446.6,444.4,"spd"],[-433.0,460.6,"spd"],[-418.8,476.4,"spd"],[-403.9,491.6,"spd"],[-388.6,506.2,"spd"],[-339.3,546.6,"gruene"],[-322.0,558.8,"gruene"],[-304.2,570.4,"gruene"],[-285.9,581.3,"gruene"],[-267.3,591.5,"gruene"],[-248.3,601.0,"gruene"],[-229.0,609.8,"gruene"],[-209.4,617.9,"gruene"],[-148.8,637.7,"cducsu"],[-128.2,642.8,"cducsu"],[-107.4,647.1,"cducsu"],[-86.5,650.7,"cducsu"],[-65.5,653.4,"cducsu"],[-44.3,655.4,"cducsu"],[-23.1,656.6,"cducsu"],[-1.9,657.0,"cducsu"],[19.4,656.7,"cducsu"],[40.6,655.5,"cducsu"],[61.7,653.6,"cducsu"],[82.8,650.8,"cducsu"],[103.7,647.3,"cducsu"],[124.5,643.1,"cducsu"],[145.1,638.0,"cducsu"],[165.5,632.2,"cducsu"],[185.7,625.6,"cducsu"],[205.7,618.3,"cducsu"],[225.3,610.3,"cducsu"],[244.7,601.5,"cducsu"],[263.7,592.0,"cducsu"],[282.3,581.9,"cducsu"],[300.6,571.0,"cducsu"],[318.4,559.5,"cducsu"],[335.8,547.3,"cducsu"],[352.7,534.5,"cducsu"],[369.2,521.1,"cducsu"],[385.1,507.0,"cducsu"],[400.5,492.4,"cducsu"],[415.4,477.2,"cducsu"],[456.4,428.5,"fdp"],[468.8,411.3,"fdp"],[480.6,393.7,"fdp"],[491.8,375.6,"fdp"],[502.2,357.1,"fdp"],[512.0,338.3,"fdp"],[521.1,319.1,"fdp"],[529.4,299.5,"fdp"],[537.0,279.7,"fdp"],[543.9,259.6,"fdp"],[560.0,198.0,"afd"],[563.8,177.1,"afd"],[566.8,156.1,"afd"],[569.1,135.0,"afd"],[570.6,113.8,"afd"],[571.3,92.6,"afd"],[571.2,71.4,"afd"],[570.3,50.1,"afd"],[568.7,29.0,"afd"],[566.2,7.9,"afd"],[563.0,-13.1,"afd"],[-602.7,-25.5,"linke"],[-606.1,-4.8,"linke"],[-608.8,16.1,"linke"],[-610.8,37.0,"linke"],[-612.0,57.9,"linke"],[-612.6,78.9,"linke"],[-612.4,99.9,"linke"],[-611.5,120.9,"linke"],[-609.9,141.8,"linke"],[-600.8,204.1,"spd"],[-596.3,224.6,"spd"],[-591.2,244.9,"spd"],[-585.3,265.1,"spd"],[-578.7,285.0,"spd"],[-571.5,304.7,"spd"],[-563.6,324.2,"spd"],[-555.1,343.4,"spd"],[-545.8,362.2,"spd"],[-536.0,380.7,"spd"],[-525.5,398.9,"spd"],[-514.4,416.7,"spd"],[-502.7,434.2,"spd"],[-490.4,451.2,"spd"],[-477.5,467.7,"spd"],[-464.0,483.9,"spd"],[-450.0,499.5,"spd"],[-435.5,514.7,"spd"],[-420.5,529.3,"spd"],[-405.0,543.5,"spd"],[-355.6,582.6,"gruene"],[-338.3,594.4,"gruene"],[-320.6,605.7,"gruene"],[-302.5,616.3,"gruene"],[-284.1,626.4,"gruene"],[-265.3,635.8,"gruene"],[-246.2,644.5,"gruene"],[-226.8,652.6,"gruene"],[-207.2,660.0,"gruene"],[-146.9,678.1,"cducsu"],[-126.4,682.8,"cducsu"],[-105.8,686.7,"cducsu"],[-85.1,689.9,"cducsu"],[-64.2,692.5,"cducsu"],[-43.3,694.3,"cducsu"],[-22.4,695.3,"cducsu"],[-1.4,695.7,"cducsu"],[19.6,695.4,"cducsu"],[40.6,694.3,"cducsu"],[61.5,692.5,"cducsu"],[82.3,690.0,"cducsu"],[103.1,686.7,"cducsu"],[123.7,682.8,"cducsu"],[144.2,678.2,"cducsu"],[164.5,672.8,"cducsu"],[184.6,666.8,"cducsu"],[204.5,660.0,"cducsu"],[224.1,652.6,"cducsu"],[243.5,644.6,"cducsu"],[262.6,635.8,"cducsu"],[281.3,626.4,"cducsu"],[299.8,616.4,"cducsu"],[317.9,605.8,"cducsu"],[335.6,594.5,"cducsu"],[352.9,582.6,"cducsu"],[369.8,570.2,"cducsu"],[386.3,557.2,"cducsu"],[402.3,543.6,"cducsu"],[417.8,529.4,"cducsu"],[432.8,514.8,"cducsu"],[447.3,499.6,"cducsu"],[461.3,484.0,"cducsu"],[500.0,434.3,"fdp"],[511.7,416.9,"fdp"],[522.8,399.1,"fdp"],[533.3,380.9,"fdp"],[543.2,362.3,"fdp"],[552.4,343.5,"fdp"],[561.0,324.3,"fdp"],[568.9,304.9,"fdp"],[576.1,285.2,"fdp"],[582.7,265.2,"fdp"],[598.2,204.2,"afd"],[601.9,183.6,"afd"],[605.0,162.8,"afd"],[607.3,141.9,"afd"],[608.9,121.0,"afd"],[609.8,100.0,"afd"],[610.0,79.0,"afd"],[609.4,58.1,"afd"],[608.2,37.1,"afd"],[606.2,16.2,"afd"],[603.5,-4.6,"afd"],[600.1,-25.3,"afd"],[-639.4,-33.1,"linke"],[-642.8,-12.9,"linke"],[-645.6,7.4,"linke"],[-647.7,27.8,"linke"],[-649.1,48.2,"linke"],[-650.0,68.7,"linke"],[-650.1,89.2,"linke"],[-649.7,109.7,"linke"],[-648.5,130.1,"linke"],[-646.8,150.6,"linke"],[-637.6,211.3,"spd"],[-633.3,231.4,"spd"],[-628.3,251.2,"spd"],[-622.8,271.0,"spd"],[-616.6,290.5,"spd"],[-609.7,309.8,"spd"],[-602.3,328.9,"spd"],[-594.3,347.8,"spd"],[-585.7,366.4,"spd"],[-576.5,384.7,"spd"],[-566.7,402.7,"spd"],[-556.4,420.4,"spd"],[-545.5,437.7,"spd"],[-534.1,454.7,"spd"],[-522.1,471.4,"spd"],[-509.6,487.6,"spd"],[-496.7,503.5,"spd"],[-483.2,518.9,"spd"],[-469.2,533.9,"spd"],[-454.8,548.5,"spd"],[-439.9,562.6,"spd"],[-424.6,576.2,"spd"],[-376.2,614.0,"gruene"],[-359.3,625.6,"gruene"],[-342.0,636.6,"gruene"],[-324.4,647.1,"gruene"],[-306.5,657.0,"gruene"],[-288.2,666.4,"gruene"],[-269.7,675.1,"gruene"],[-250.9,683.3,"gruene"],[-231.9,690.9,"gruene"],[-212.6,697.9,"gruene"],[-153.6,715.1,"cducsu"],[-133.6,719.6,"cducsu"],[-113.5,723.5,"cducsu"],[-93.3,726.7,"cducsu"],[-73.0,729.3,"cducsu"],[-52.6,731.2,"cducsu"],[-32.1,732.5,"cducsu"],[-11.6,733.2,"cducsu"],[8.9,733.2,"cducsu"],[29.3,732.5,"cducsu"],[49.8,731.2,"cducsu"],[70.2,729.3,"cducsu"],[90.5,726.7,"cducsu"],[110.8,723.5,"cducsu"],[130.9,719.6,"cducsu"],[150.9,715.2,"cducsu"],[170.7,710.0,"cducsu"],[190.4,704.3,"cducsu"],[209.9,697.9,"cducsu"],[229.1,691.0,"cducsu"],[248.2,683.4,"cducsu"],[267.0,675.2,"cducsu"],[285.5,666.4,"cducsu"],[303.7,657.1,"cducsu"],[321.7,647.2,"cducsu"],[339.3,636.7,"cducsu"],[356.5,625.7,"cducsu"],[373.4,614.1,"cducsu"],[390.0,602.0,"cducsu"],[406.1,589.4,"cducsu"],[421.9,576.3,"cducsu"],[437.2,562.7,"cducsu"],[452.1,548.6,"cducsu"],[466.5,534.0,"cducsu"],[480.5,519.0,"cducsu"],[494.0,503.6,"cducsu"],[531.4,454.9,"fdp"],[542.8,437.9,"fdp"],[553.7,420.5,"fdp"],[564.1,402.8,"fdp"],[573.8,384.8,"fdp"],[583.0,366.5,"fdp"],[591.6,347.9,"fdp"],[599.7,329.1,"fdp"],[607.1,310.0,"fdp"],[613.9,290.6,"fdp"],[620.1,271.1,"fdp"],[635.0,211.5,"afd"],[638.7,191.3,"afd"],[641.7,171.1,"afd"],[644.2,150.7,"afd"],[645.9,130.3,"afd"],[647.1,109.8,"afd"],[647.5,89.4,"afd"],[647.4,68.9,"afd"],[646.6,48.4,"afd"],[645.1,28.0,"afd"],[643.0,7.6,"afd"],[640.2,-12.7,"afd"],[636.9,-32.9,"afd"],[-680.4,-15.4,"linke"],[-687.1,55.7,"linke"],[-662.8,267.7,"spd"],[-640.2,335.4,"spd"],[-610.7,400.4,"spd"],[-574.6,461.9,"spd"],[-532.3,519.4,"spd"],[-373.0,661.4,"gruene"],[-311.1,696.9,"gruene"],[-108.1,762.4,"cducsu"],[-37.1,769.9,"cducsu"],[34.3,769.9,"cducsu"],[105.3,762.5,"cducsu"],[175.1,747.7,"cducsu"],[243.1,725.8,"cducsu"],[308.4,697.0,"cducsu"],[370.3,661.5,"cducsu"],[428.2,619.8,"cducsu"],[571.9,462.1,"fdp"],[608.0,400.5,"fdp"],[637.5,335.5,"fdp"],[683.8,127.2,"afd"],[684.5,55.9,"afd"],[677.8,-15.2,"afd"]],"sectors":[[45.0,false,"+45"],[-53.0,false,"-53"]]},"post":{"speaker":"Achim Post","party":"spd","date":"2018-09-12","start":null,"end":null,"video":"speech_9487_8.mp4","offset":0.0,"cols":["t0","t1","w","sent","ang","angSm","named","ep","gest","pitch","loud"],"words":[[10.75,11.17,"Herr",0,null,null,null,0,null,113.7,65.1],[11.23,12.37,"Präsident!",0,null,null,null,0,null,127.9,60.0],[12.39,12.55,"Liebe",1,null,null,null,0,null,115.1,67.6],[12.59,12.95,"Kolleginnen",1,null,null,null,0,null,118.2,72.8],[12.97,13.05,"und",1,null,null,null,0,null,119.1,62.0],[13.09,13.41,"Kollegen!",1,null,null,null,0,null,120.5,74.3],[13.43,13.61,"Meine",2,null,null,null,0,null,116.0,72.1],[13.63,13.79,"Damen",2,null,null,null,0,null,110.1,69.3],[13.81,13.93,"und",2,null,null,null,0,null,113.7,69.4],[13.95,15.67,"Herren!",2,null,50.8,null,1,null,127.3,50.7],[15.71,15.81,"Wir",3,45.9,52.9,null,1,2,114.3,74.3],[15.85,16.05,"merken",3,50.8,54.9,null,1,2,132.7,67.6],[16.07,16.15,"ja",3,54.9,55.5,null,1,2,132.9,71.6],[16.19,16.25,"in",3,58.5,54.9,null,1,2,113.9,66.0],[16.29,16.49,"dieser",3,61.3,54.9,null,1,2,122.4,69.0],[16.51,17.6,"Debatte,",3,56.1,54.9,null,1,2,136.1,60.3],[17.64,17.82,"dass",3,40.3,40.3,null,0,2,127.7,65.1],[17.86,19.24,"es",3,26.4,26.4,null,0,0,128.4,46.9],[19.26,19.48,"um",3,25.7,25.7,null,0,0,113.3,64.8],[19.52,19.82,"einen",3,3.8,3.8,null,0,0,132.6,70.0],[19.86,20.2,"wichtigen",3,-37.8,3.8,null,0,0,119.3,68.4],[20.22,20.62,"Haushalt",3,-33.7,3.5,null,0,0,132.2,67.0],[20.66,21.88,"geht,",3,3.5,-13.2,null,0,0,156.5,51.7],[22.58,23.62,"um",3,18.9,-14.8,null,0,2,135.1,65.2],[23.66,23.86,"einen",3,-14.8,-14.8,null,0,1,120.5,69.8],[23.88,24.24,"Haushalt,",3,-13.2,-14.8,null,0,1,127.8,66.4],[24.26,24.32,"in",3,-25.4,-25.4,null,0,1,114.7,64.3],[24.34,24.46,"dem",3,-29.6,-29.6,null,0,1,116.3,68.8],[24.52,24.58,"es",3,-33.0,-30.0,null,0,1,122.0,60.5],[24.65,24.78,"um",3,-33.6,-30.0,null,0,1,124.4,58.7],[24.83,25.0,"viel",3,-33.0,-30.0,null,0,1,141.2,71.4],[25.05,25.31,"Geld",3,-30.0,-30.0,null,0,1,132.3,67.2],[25.35,26.27,"geht,",3,-26.3,-26.3,null,0,1,174.3,53.1],[26.29,26.39,"und",3,-23.5,-24.9,null,0,1,121.5,65.6],[26.41,26.51,"wir",3,-23.0,-23.2,null,0,1,139.6,72.4],[26.55,26.83,"merken",3,-10.3,-16.6,null,0,0,137.8,68.4],[26.85,28.99,"gleichzeitig,",3,null,-8.2,null,0,0,143.1,52.9],[29.01,29.13,"dass",3,-1.2,-5.3,null,0,0,119.6,60.9],[29.17,29.27,"es",3,-4.3,-2.7,null,0,0,126.6,67.6],[29.31,29.89,"dabei",3,-6.2,-0.1,null,0,0,123.5,68.0],[29.93,30.15,"um",3,1.0,-1.2,null,0,0,124.5,61.9],[30.19,30.77,"viel",3,8.2,-2.7,null,0,0,121.5,64.2],[30.81,31.01,"mehr",3,1.8,-2.7,null,0,0,110.2,65.9],[31.03,31.19,"geht.",3,-2.7,-2.7,null,0,0,89.4,63.3],[31.39,31.45,"Es",4,-8.6,-8.6,null,0,0,147.0,72.4],[31.47,31.61,"geht",4,-11.2,-11.2,null,0,0,157.2,66.8],[31.65,31.79,"um",4,-12.5,-12.5,null,0,0,123.8,68.1],[31.83,31.93,"die",4,-13.7,-13.7,null,0,0,126.8,64.3],[31.97,33.22,"Frage,",4,-18.4,-13.7,null,0,0,148.0,57.7],[33.24,33.4,"in",4,-35.0,-13.7,null,0,0,130.0,69.1],[33.44,33.82,"welchem",4,-40.5,-13.7,null,0,0,142.5,68.0],[33.88,35.24,"Land,",4,4.4,4.4,null,0,0,193.1,51.3],[35.26,35.34,"ja,",4,28.5,6.4,null,0,0,131.6,72.1],[35.4,35.5,"in",4,28.5,6.4,null,0,0,148.0,72.1],[35.54,36.72,"welchem",4,26.6,7.8,null,0,2,151.2,62.0],[37.26,37.54,"Wir",5,6.4,7.8,null,0,0,155.3,72.3],[37.68,37.88,"leben",5,0.0,6.4,null,0,2,150.5,70.5],[37.92,38.88,"wollen,",5,7.8,0.0,null,0,0,111.9,56.1],[38.9,39.18,"und",5,-10.4,-4.6,null,0,0,138.0,64.9],[39.2,39.56,"viele,",5,-15.3,-7.5,null,0,0,156.3,71.6],[39.58,39.82,"nein,",5,-18.5,-7.5,null,0,0,143.7,70.4],[39.86,39.96,"ich",5,-4.6,-7.8,null,0,0,126.8,61.3],[40.0,40.24,"würde",5,null,-7.5,null,0,0,127.6,70.4],[40.28,40.8,"sagen,",5,9.4,-7.5,null,0,0,118.7,64.4],[40.84,40.98,"die",5,-5.2,-7.5,null,0,0,163.3,73.2],[41.02,41.34,"meisten",5,-9.8,-11.5,null,0,0,198.2,67.1],[41.36,41.46,"hier",5,-13.1,-9.8,null,0,0,189.1,72.4],[41.52,41.62,"im",5,-15.0,-9.8,null,0,0,168.0,70.3],[41.66,43.34,"Saal",5,-16.1,-9.8,null,0,0,151.3,51.5],[43.38,43.54,"und",5,2.9,2.9,null,0,0,129.4,68.7],[43.56,43.71,"die",5,8.5,2.9,null,0,1,155.6,73.1],[43.74,44.19,"meisten",5,12.2,2.9,null,0,1,175.6,65.0],[44.23,44.35,"im",5,3.0,2.9,null,0,0,158.7,73.1],[44.41,45.21,"Land",5,-3.4,-3.4,null,0,0,145.9,58.2],[45.23,45.51,"wollen,",5,-11.3,-3.4,null,0,0,174.3,72.0],[45.53,45.65,"wie",5,-10.2,-3.4,null,0,2,173.0,73.7],[45.71,46.01,"ich,",5,-7.5,-3.4,null,0,0,167.0,63.4],[46.03,46.17,"ein",5,-3.0,-3.0,null,0,0,140.4,69.6],[46.21,47.59,"demokratisches,",5,14.0,0.5,null,0,0,140.6,63.8],[47.61,48.53,"soziales",5,12.4,0.5,null,0,0,165.7,65.8],[48.57,48.81,"und",5,27.9,3.7,null,0,0,130.9,68.4],[48.85,49.53,"liberales",5,0.5,4.0,null,0,0,138.8,68.1],[49.57,50.69,"Deutschland,",5,-2.2,4.0,null,0,0,118.1,55.0],[50.73,50.79,"in",5,3.7,4.0,null,0,0,126.0,71.9],[50.81,50.97,"dem",5,4.0,4.0,null,0,0,141.0,70.5],[51.01,51.13,"auf",5,5.6,4.0,null,0,0,155.0,69.6],[51.17,51.29,"der",5,6.3,4.0,null,0,0,141.5,69.9],[51.33,51.76,"Grundlage",5,5.2,4.0,null,0,0,169.1,68.8],[51.79,52.03,"unserer",5,0.4,2.3,null,0,0,153.8,68.3],[52.08,52.92,"Verfassung",5,2.3,0.4,null,0,0,152.2,62.9],[52.96,53.46,"alle",5,-8.4,-8.4,null,0,0,171.5,65.7],[53.5,54.26,"82",5,-16.2,-11.7,null,0,0,141.0,65.5],[54.28,54.94,"Millionen",5,-11.7,-11.7,null,0,0,151.3,67.8],[54.98,55.48,"Bürgerinnen",5,-18.3,-11.7,null,0,0,131.0,68.5],[55.52,55.66,"und",5,-16.6,-13.9,null,0,0,124.7,62.3],[55.7,56.7,"Bürger",5,6.6,-5.9,null,0,0,127.2,58.2],[56.74,56.84,"die",5,4.8,-2.1,null,0,0,128.4,71.5],[56.88,57.56,"gleichen",5,null,2.4,null,0,0,131.6,65.7],[57.62,58.22,"Rechte",5,-0.0,2.4,null,0,0,125.9,63.1],[58.26,58.6,"und",5,-4.2,-0.0,null,0,0,123.8,59.7],[58.62,59.08,"Pflichten",5,5.8,-2.1,null,0,0,112.5,65.1],[59.12,63.27,"haben.",5,-22.0,-2.1,null,0,0,112.6,60.5],[63.29,63.55,"Und",6,null,-4.2,null,0,null,162.8,71.8],[63.57,64.17,"alle,",6,null,5.8,null,0,null,155.8,67.9],[64.19,64.31,"die",6,null,45.3,null,0,null,159.5,74.5],[64.35,64.61,"unser",6,null,45.3,null,0,null,149.0,71.6],[64.65,65.71,"Grundgesetz",6,45.6,43.3,null,1,0,166.6,63.5],[66.57,67.59,"missachten",7,45.3,41.4,null,1,0,182.8,65.9],[67.65,67.91,"und",7,41.4,22.1,null,1,0,171.7,63.3],[67.95,69.27,"verachten,",7,2.9,2.9,null,1,0,144.3,56.7],[69.29,69.65,"sollten",7,0.1,2.9,null,0,0,160.2,69.7],[69.69,69.91,"eines",7,-5.7,2.9,null,0,0,168.7,65.9],[69.97,71.19,"wissen.",7,-1.7,2.9,null,0,0,115.1,54.2],[71.21,71.37,"Wir",8,17.3,1.7,null,0,0,199.0,70.8],[71.39,71.61,"sind",8,28.1,5.1,null,0,0,195.1,68.7],[71.65,72.33,"mehr.",8,26.8,17.3,null,0,0,126.7,63.2],[72.38,72.52,"Wir",9,1.7,18.0,null,0,1,203.6,68.0],[72.56,72.78,"werden",9,5.1,18.0,null,0,0,149.5,70.3],[72.82,72.94,"mit",9,18.0,12.0,null,0,0,161.0,69.2],[72.96,73.18,"Herz",9,23.0,5.1,null,0,0,174.1,64.9],[73.22,73.34,"und",9,12.0,5.1,null,0,0,169.8,64.8],[73.38,73.98,"Verstand",9,0.3,0.3,null,0,0,154.2,64.3],[74.02,74.24,"für",9,-3.4,-3.4,null,0,0,151.5,69.5],[74.28,74.52,"unser",9,-4.6,-4.6,null,0,0,180.4,72.0],[74.56,74.84,"Land",9,-6.2,-6.2,null,0,0,151.8,65.6],[74.88,75.0,"und",9,-8.3,-8.3,null,0,0,130.0,62.8],[75.04,75.2,"für",9,-10.2,-10.2,null,0,0,154.5,70.9],[75.24,75.5,"unsere",9,-17.0,-10.2,null,0,0,155.7,70.8],[75.56,76.36,"Demokratie",9,-23.0,-10.2,null,0,0,148.9,64.1],[76.4,76.76,"kämpfen,",9,-11.8,-10.2,null,0,0,147.3,68.3],[76.78,76.98,"liebe",9,8.4,-1.7,null,0,0,137.1,67.1],[77.0,77.4,"Kolleginnen",9,29.6,8.4,null,0,0,121.4,69.1],[77.44,77.52,"und",9,33.9,19.0,null,0,0,120.4,63.4],[77.56,80.96,"Kollegen.",9,null,29.6,null,0,null,176.2,62.7],[82.25,82.45,"Denn",10,null,null,null,0,null,168.6,70.8],[82.49,82.71,"eines",10,null,null,null,0,null,204.5,68.1],[82.73,83.01,"sollten",10,null,null,null,0,null,172.1,69.7],[83.05,83.25,"wir",10,null,19.2,null,0,null,182.9,72.6],[83.27,83.93,"uns",10,23.3,6.0,null,0,2,185.3,56.3],[83.97,84.23,"kurz",10,19.2,-7.2,null,0,0,179.7,61.5],[84.27,85.61,"vergegenwärtigen.",10,-7.2,-16.0,null,0,0,164.8,60.0],[85.65,85.73,"Wir",11,-24.7,-24.7,null,0,0,198.5,71.9],[85.75,85.95,"haben",11,-28.8,-24.7,null,0,0,199.7,69.0],[85.99,86.09,"in",11,-30.5,-24.7,null,0,0,193.9,75.3],[86.13,87.25,"Deutschland,",11,-28.8,-24.7,null,0,0,141.8,56.2],[87.31,87.49,"im",11,10.1,10.1,null,0,0,130.0,66.5],[87.51,87.85,"Bund",11,29.8,29.8,null,0,0,188.6,68.3],[87.89,88.07,"und",11,38.7,29.8,null,0,0,143.0,65.5],[88.11,88.19,"in",11,38.0,29.8,null,0,0,184.5,71.6],[88.23,88.37,"den",11,38.7,29.8,null,0,0,175.5,71.4],[88.39,89.13,"Ländern",11,17.0,38.0,null,0,0,130.0,62.3],[89.79,90.91,"17",12,-1.1,37.1,null,0,2,179.8,64.3],[90.95,91.89,"demokratische",12,29.1,32.4,null,0,0,161.2,64.8],[91.93,92.93,"Innenminister,",12,38.2,30.7,null,0,0,112.7,63.7],[92.95,93.03,"wir",12,37.1,31.4,null,0,0,136.1,72.2],[93.05,93.43,"haben",12,32.4,34.7,null,0,0,143.3,68.2],[93.47,94.23,"17",12,null,34.7,null,0,0,174.2,64.1],[94.27,95.09,"demokratische",12,30.4,31.4,null,0,0,139.0,65.5],[95.13,96.15,"Justizministerinnen",12,42.2,19.4,null,0,0,133.3,65.1],[96.19,96.33,"und",12,8.4,3.5,null,0,0,123.1,63.9],[96.38,97.24,"Justizminister,",12,-1.3,-1.3,null,0,0,128.9,64.0],[97.28,97.38,"und",12,-4.2,-4.2,null,0,0,124.0,64.0],[97.4,97.48,"wir",12,-6.5,-6.5,null,0,0,117.3,72.7],[97.5,97.82,"haben",12,-13.3,-6.5,null,0,0,121.0,68.7],[97.84,98.78,"17",12,-22.9,-6.5,null,0,0,142.4,59.9],[98.82,99.86,"demokratische",12,-28.8,-9.9,null,0,0,117.1,63.8],[99.92,101.0,"Regierungschefinnen",12,39.7,5.3,null,0,0,121.3,66.9],[101.04,101.22,"und",12,48.9,31.8,null,0,0,109.9,63.3],[101.26,102.7,"Regierungschefs.",12,null,31.8,null,0,0,125.4,60.1],[102.74,103.16,"Wir",13,23.9,31.8,null,0,0,189.6,67.1],[103.2,104.18,"Demokraten",13,42.2,18.6,null,0,1,152.4,66.9],[104.22,104.74,"haben",13,13.2,6.1,null,0,0,138.6,65.1],[104.78,105.16,"alle",13,-0.9,1.0,null,0,2,132.5,67.3],[105.2,105.76,"politischen",13,-9.2,1.0,null,0,2,127.5,64.8],[105.8,106.38,"Schalthebel",13,-17.1,1.0,null,0,2,116.3,67.0],[106.44,106.52,"in",13,1.0,1.0,null,0,0,107.2,72.8],[106.56,106.66,"der",13,3.0,3.0,null,0,0,106.9,67.1],[106.7,107.35,"Hand.",13,14.0,14.0,null,0,0,131.8,64.4],[107.36,107.62,"Wir",14,23.8,22.1,null,0,0,164.6,68.8],[107.67,108.07,"haben",14,22.1,22.1,null,0,0,149.1,67.8],[108.11,108.47,"also",14,50.8,22.1,null,0,0,141.7,68.5],[108.49,108.77,"auch",14,43.6,23.8,null,0,0,155.2,64.5],[108.79,109.03,"alle",14,2.3,25.6,null,0,0,139.1,72.0],[109.07,109.67,"Mittel,",14,0.0,36.5,null,0,0,138.9,63.0],[109.69,109.83,"um",14,25.6,36.5,null,0,0,133.1,61.5],[109.85,109.99,"zu",14,36.5,36.5,null,0,0,131.3,66.7],[110.03,110.49,"verhindern,",14,42.5,42.5,null,0,0,141.0,70.8],[110.51,110.63,"dass",14,44.3,43.4,null,0,0,154.7,64.5],[110.67,110.85,"sich",14,47.0,43.4,null,1,0,116.0,65.7],[110.87,110.97,"die",14,48.0,43.4,null,1,0,142.8,71.4],[111.01,111.55,"rechte",14,43.4,43.4,null,1,0,149.1,63.6],[111.59,112.11,"braune",14,18.2,43.4,null,1,0,134.5,67.9],[112.15,112.55,"Front",14,5.1,43.4,null,1,0,124.9,65.1],[112.59,112.67,"in",14,36.8,40.5,null,0,0,129.3,72.0],[112.71,112.97,"unserem",14,46.8,38.7,null,1,0,118.5,69.7],[113.01,113.57,"Land",14,48.5,40.5,null,1,0,121.6,60.6],[113.63,114.17,"weiter",14,40.5,43.6,null,0,0,116.2,62.9],[114.19,114.71,"breitmacht.",14,null,46.8,null,0,0,119.6,64.5],[116.57,116.75,"Denn",15,null,null,null,0,null,147.1,68.6],[116.79,117.25,"spätestens",15,null,null,null,0,null,203.2,71.6],[117.27,117.47,"seit",15,null,null,null,0,null,185.1,66.3],[117.51,118.61,"Chemnitz",15,null,null,null,0,null,178.0,62.2],[118.75,119.03,"ist",16,null,null,null,0,null,150.7,65.5],[119.07,119.19,"doch",16,null,null,null,0,null,177.1,72.7],[119.23,119.69,"endgültig",16,null,6.7,null,0,null,174.1,65.0],[119.73,119.91,"klar",16,-6.1,4.7,null,0,0,166.6,73.1],[119.93,121.19,"geworden.",16,6.7,6.7,null,0,0,122.8,58.4],[121.23,122.65,"Nazis,",17,28.5,17.6,null,0,0,160.0,56.4],[122.67,123.65,"Hooligans,",17,2.7,6.7,null,0,0,140.0,61.0],[123.67,124.45,"Pegida",17,44.1,28.5,null,0,0,158.4,67.2],[124.49,124.71,"und",17,44.5,28.5,null,0,0,194.0,66.7],[124.97,126.06,"AfD",17,1.3,11.7,"afd",0,0,143.9,58.9],[126.1,126.86,"demonstrieren",17,49.0,44.1,null,0,0,168.0,67.2],[126.9,127.58,"zusammen",17,0.9,22.1,null,0,0,160.5,67.5],[127.62,127.98,"und",17,11.7,11.7,null,0,0,150.5,64.2],[128.02,128.56,"agieren",17,51.5,11.7,null,0,0,140.8,66.2],[128.6,129.06,"zusammen,",17,22.1,0.9,null,0,0,114.0,68.7],[129.08,129.3,"liebe",17,-8.8,11.0,null,0,1,108.7,65.9],[129.32,129.74,"Kolleginnen",17,-2.7,3.0,null,0,0,109.1,69.4],[129.78,129.88,"und",17,-0.7,-0.7,null,0,0,109.9,60.4],[129.92,130.9,"Kollegen.",17,11.0,-1.7,null,0,0,142.1,60.0],[130.92,131.54,"Deshalb",18,3.0,-1.7,null,0,1,159.0,65.5],[131.58,131.68,"an",18,-2.3,-1.7,null,0,0,147.4,72.9],[131.7,131.78,"die",18,-1.7,-1.7,null,0,0,151.6,73.5],[131.82,132.18,"Adresse",18,-3.3,-1.7,null,0,0,176.8,69.0],[132.22,132.34,"der",18,-13.5,-1.7,null,0,0,160.3,71.9],[132.52,133.26,"AfD.",18,32.8,32.8,"afd",0,0,133.7,65.0],[133.28,133.4,"Sie",19,46.6,46.6,null,1,0,198.3,70.1],[133.42,133.76,"gehören",19,47.2,47.2,null,1,0,184.3,72.1],[133.78,134.06,"nicht",19,50.4,50.2,null,1,0,175.3,61.8],[134.12,134.2,"in",19,53.8,50.4,null,1,1,147.6,72.6],[134.24,134.36,"die",19,55.3,51.9,null,1,1,163.3,72.3],[134.42,134.93,"erste,",19,50.2,53.8,null,1,1,150.8,62.9],[134.96,135.32,"zweite",19,51.9,53.8,null,1,0,146.2,69.3],[135.37,135.49,"und",19,54.0,54.0,null,1,0,132.4,63.2],[135.51,135.75,"dritte",19,54.6,54.0,null,1,0,148.2,66.7],[135.77,135.99,"Reihe",19,53.2,54.0,null,1,0,138.3,70.8],[136.03,136.15,"des",19,54.4,54.0,null,1,0,144.6,64.1],[136.19,137.07,"Bundestages.",19,54.0,54.0,null,1,0,132.0,64.1],[137.09,137.15,"Sie",20,53.4,54.0,null,1,0,123.1,73.2],[137.17,137.51,"gehören",20,54.0,54.0,null,1,0,132.6,68.9],[137.53,137.67,"auf",20,54.4,53.4,null,1,0,119.0,61.5],[137.71,137.89,"die",20,52.6,52.6,null,1,0,143.1,64.5],[137.95,138.41,"erste,",20,51.2,52.6,null,1,1,156.3,64.2],[138.43,139.03,"zweite",20,49.6,51.2,null,1,0,140.9,65.3],[139.07,139.19,"und",20,50.7,50.7,null,1,1,133.6,64.7],[139.21,139.47,"dritte",20,52.6,50.7,null,1,0,140.7,66.0],[139.51,139.93,"Seite",20,47.9,49.6,null,1,0,129.9,63.3],[139.97,140.05,"der",20,50.7,49.6,null,1,0,137.7,69.3],[140.09,141.29,"Verfassungsschutzberichte",20,49.6,47.9,null,1,0,153.8,64.5],[141.33,141.39,"in",20,4.3,4.3,null,0,0,140.1,72.2],[141.43,141.65,"diesem",20,-0.7,-0.7,null,0,0,133.0,71.0],[141.67,141.91,"Land,",20,-10.9,-10.9,null,0,0,122.6,66.1],[141.93,142.11,"liebe",20,-20.4,-14.8,null,0,0,122.9,67.0],[142.15,142.49,"Kolleginnen",20,-25.6,-14.9,null,0,0,120.4,68.7],[142.53,142.63,"und",20,-19.3,-19.3,null,0,0,128.2,71.5],[142.65,143.13,"Kollegen.",20,-14.8,-20.4,null,0,0,191.8,64.1],[145.73,146.01,"Und",21,-14.9,-19.3,null,0,0,172.1,72.7],[146.05,146.17,"all",21,-27.8,-14.9,null,0,0,220.4,72.6],[146.21,146.37,"das",21,-30.2,-14.8,null,0,0,215.1,71.7],[146.41,147.01,"unterstreicht",21,3.3,3.3,null,0,0,196.0,70.2],[147.09,147.65,"eins.",21,3.9,3.9,null,0,0,127.6,62.6],[147.67,147.81,"Wir",22,30.6,3.9,null,0,0,155.1,65.6],[147.85,148.51,"brauchen",22,43.0,3.9,null,0,0,185.7,69.1],[148.55,148.88,"einen",22,9.5,3.9,null,0,0,153.8,67.6],[148.91,149.66,"starken,",22,2.9,7.1,null,0,0,164.0,67.4],[149.68,150.82,"handlungsfähigen,",22,-8.7,7.1,null,0,0,153.0,68.6],[150.84,151.8,"demokratischen",22,-26.0,7.1,null,0,0,163.4,66.5],[151.84,151.98,"und",22,7.1,7.1,null,0,0,136.0,64.1],[152.02,152.66,"sozialen",22,16.9,7.6,null,0,0,136.4,69.3],[152.7,154.02,"Rechtsstaat.",22,42.5,7.6,null,0,0,154.2,58.5],[154.04,154.66,"Dafür",23,7.6,7.6,null,0,0,176.9,67.8],[154.7,154.82,"sind",23,9.3,7.6,null,0,0,151.3,63.1],[154.86,155.0,"wir",23,4.8,6.2,null,0,0,134.2,67.3],[155.04,155.56,"bereit",23,-0.1,2.3,null,0,0,146.7,64.1],[155.58,155.71,"zu",23,-23.6,-11.8,null,0,0,143.0,71.5],[155.74,156.83,"investieren.",23,null,-24.3,null,0,0,165.0,64.9],[156.85,157.23,"Dafür",24,-25.1,-28.0,null,0,1,162.7,68.5],[157.27,157.43,"sind",24,-31.9,-29.8,null,0,1,158.8,65.1],[157.47,157.63,"wir",24,-31.6,-29.8,null,0,1,140.8,71.7],[157.65,157.85,"auch",24,-30.9,-28.8,null,0,1,144.7,62.2],[157.89,158.39,"bereit,",24,-28.8,-28.8,null,0,0,143.1,65.2],[158.41,158.59,"mehr",24,-21.5,-21.5,null,0,0,187.7,65.3],[158.63,158.73,"zu",24,-7.3,-7.3,null,0,0,151.8,70.9],[158.77,159.39,"investieren,",24,-3.5,-3.5,null,0,0,134.5,66.3],[159.41,159.61,"liebe",24,8.0,8.0,null,0,0,132.5,66.0],[159.63,160.01,"Kolleginnen",24,20.5,20.5,null,0,0,130.1,70.2],[160.05,160.15,"und",24,30.0,20.5,null,0,0,133.7,69.2],[160.17,160.47,"Kollegen.",24,34.1,20.5,null,0,0,110.5,66.9],[160.81,160.89,"Ich",25,26.3,20.5,null,0,1,164.5,65.4],[160.91,161.03,"will",25,6.3,6.3,null,0,1,189.1,73.1],[161.05,161.21,"Ihnen",25,-1.5,-1.5,null,0,1,175.1,69.5],[161.23,161.35,"mal",25,-5.7,-5.7,null,0,1,159.5,68.5],[161.37,161.57,"drei",25,-9.9,-9.9,null,0,1,182.7,65.3],[161.61,161.87,"Punkte",25,-21.1,-9.9,null,0,1,177.3,67.9],[161.91,162.15,"nennen,",25,-25.7,-9.9,null,0,0,151.3,68.5],[162.19,162.33,"was",25,-20.8,-9.9,null,0,0,151.4,66.8],[162.35,162.41,"in",25,-3.1,-3.1,null,0,0,158.2,70.2],[162.46,162.65,"diesem",25,21.6,8.7,null,0,0,152.5,70.7],[162.68,163.12,"Haushalt",25,41.8,8.7,null,0,0,163.2,66.2],[163.14,164.18,"vorkommt.",25,46.9,8.7,null,0,0,142.9,58.4],[164.16,164.94,"Erstens.",26,8.7,8.7,null,0,1,154.2,62.6],[164.96,165.04,"Wir",27,-22.4,-22.4,null,0,0,143.3,66.9],[165.06,165.36,"brauchen",27,-24.4,-22.4,null,0,0,167.1,69.4],[165.38,165.62,"einen",27,-27.9,-22.4,null,0,0,151.1,66.6],[165.66,166.32,"wehrhaften",27,-24.9,-22.4,null,0,0,167.3,65.7],[166.34,167.23,"Staat.",27,7.4,7.4,null,0,0,128.1,59.2],[167.24,167.37,"Wir",28,14.3,14.3,null,0,0,142.8,67.9],[167.4,167.63,"haben",28,19.3,16.8,null,0,0,193.5,68.5],[167.69,167.77,"in",28,21.6,16.8,null,0,0,179.9,72.8],[167.81,167.91,"der",28,22.2,16.8,null,0,0,180.9,63.6],[167.93,169.23,"Koalition",28,null,16.7,null,0,null,159.9,60.2],[169.27,169.65,"bereits",28,8.9,11.5,null,0,0,164.0,68.6],[169.67,169.87,"einen",28,14.2,6.2,null,0,0,159.6,67.5],[169.91,170.33,"ordentlichen",28,3.6,-11.8,null,0,0,166.2,67.9],[170.37,170.79,"Aufwuchs",28,-27.2,3.6,null,0,0,144.9,62.6],[170.83,171.05,"bei",28,-32.2,3.6,null,0,0,149.6,64.1],[171.07,172.24,"Polizei,",28,-32.4,2.6,null,0,0,171.8,63.0],[172.26,172.66,"Zoll",28,8.8,1.1,null,0,0,181.4,69.3],[172.68,172.82,"und",28,8.5,2.6,null,0,0,165.0,68.0],[172.86,173.22,"Justiz",28,2.6,8.5,null,0,0,172.2,62.2],[173.26,173.82,"beschlossen.",28,1.1,8.8,null,0,0,170.8,67.3],[173.84,174.04,"Da",29,43.9,8.5,null,0,0,151.9,70.4],[174.06,174.46,"müssen",29,51.8,8.3,null,0,0,176.5,66.6],[174.5,174.6,"und",29,34.2,8.3,null,0,0,161.6,68.2],[174.64,174.82,"da",29,8.3,8.3,null,0,0,154.8,67.6],[174.86,175.12,"werden",29,-0.4,4.1,null,0,0,159.6,68.6],[175.16,175.46,"wir",29,-9.5,-0.4,null,0,0,138.1,67.2],[175.51,176.01,"weitermachen.",29,-33.6,-9.5,null,0,0,130.2,66.3],[177.13,177.63,"Grundlegend",30,4.1,-30.2,null,0,0,211.3,69.8],[177.67,177.81,"ist",30,-30.2,-30.2,null,0,1,205.2,68.7],[177.85,178.17,"dabei",30,-30.9,-30.2,null,0,1,190.5,71.4],[178.19,178.67,"eines.",30,-31.4,4.1,null,0,0,116.6,60.6],[179.66,179.97,"Das",31,27.5,10.5,null,0,2,137.8,66.3],[180.03,180.75,"Gewaltmonopol",31,34.4,10.5,null,0,2,183.2,70.0],[180.79,180.93,"des",31,37.1,10.5,null,0,0,180.2,64.1],[180.97,181.71,"demokratischen",31,10.5,10.5,null,0,0,158.0,66.0],[181.75,182.31,"Staates",31,-2.7,-2.7,null,0,0,143.9,67.0],[182.35,182.63,"muss",31,-18.0,-2.7,null,0,0,148.5,62.4],[182.67,183.27,"immer",31,-34.8,-2.7,null,0,0,163.6,63.3],[183.32,183.72,"und",31,-49.7,-2.7,null,0,0,154.3,61.7],[183.78,184.22,"überall",31,7.4,7.4,null,0,0,138.4,70.2],[184.26,184.68,"gelten.",31,14.5,14.5,null,0,0,112.1,64.6],[184.7,184.84,"Und",32,18.7,14.5,null,0,0,161.3,68.2],[184.88,185.0,"es",32,20.6,14.5,null,0,0,164.9,67.6],[185.02,185.38,"muss",32,41.5,14.5,null,0,0,184.2,63.4],[185.42,186.52,"unterschiedslos",32,8.4,8.4,null,0,0,172.2,66.7],[186.58,187.07,"ausgeübt",32,-31.4,8.4,null,0,0,139.6,63.9],[187.11,188.01,"werden.",32,-25.6,8.4,null,0,0,113.8,57.2],[188.03,188.31,"Gegen",33,8.4,6.0,null,0,0,162.8,71.4],[188.35,188.79,"Nazis",33,11.3,6.0,null,0,0,186.4,66.9],[188.81,188.97,"und",33,6.0,7.1,null,0,0,175.5,67.2],[189.01,189.73,"Gewalttäter",33,5.6,8.4,null,0,0,168.2,68.5],[189.79,190.19,"genauso",33,7.1,9.1,null,0,0,161.1,71.3],[190.23,190.33,"wie",33,9.1,8.0,null,0,0,161.1,68.1],[190.35,190.57,"gegen",33,9.8,8.0,null,0,0,154.9,65.9],[190.63,191.26,"Islamisten",33,13.2,8.0,null,0,0,159.5,67.8],[191.3,191.42,"und",33,8.0,8.0,null,0,0,151.6,64.1],[191.44,191.68,"gegen",33,1.3,1.3,null,0,0,145.8,66.2],[191.7,191.94,"schwer",33,-11.4,-11.4,null,0,0,161.2,65.3],[191.96,192.52,"kriminelle",33,-37.5,-27.5,null,0,0,150.3,68.2],[192.56,193.38,"Familienclans,",33,-32.4,-27.5,null,0,0,143.6,68.1],[193.4,193.58,"liebe",33,-28.8,-28.1,null,0,0,127.9,66.7],[193.62,194.01,"Kolleginnen",33,-27.5,-28.1,null,0,0,120.3,69.7],[194.02,194.12,"und",33,-26.0,-26.7,null,0,0,120.0,69.3],[194.16,194.91,"Kollegen.",33,null,-12.0,null,0,0,135.3,62.5],[196.3,196.6,"Zum",34,2.0,2.0,null,0,0,179.2,71.4],[196.62,197.07,"wehrhaften",34,6.5,2.0,null,0,0,200.4,69.0],[197.11,197.77,"demokratischen",34,15.0,2.0,null,0,0,180.3,68.1],[197.81,198.23,"Staat",34,null,-0.0,null,0,0,172.5,69.5],[198.27,198.69,"gehören",34,-2.1,-4.7,null,0,0,166.3,71.8],[198.73,199.21,"genauso",34,-7.3,-4.7,null,0,0,166.5,71.7],[199.25,199.83,"Investitionen",34,-33.8,-8.0,null,0,0,161.6,67.6],[199.87,200.07,"in",34,-8.6,-8.6,null,0,1,161.9,59.9],[200.12,200.8,"Prävention",34,4.9,-9.5,null,0,0,176.8,69.2],[200.96,201.08,"und",34,-17.8,-9.5,null,0,0,167.2,63.6],[201.12,201.26,"in",34,-29.4,-8.6,null,0,0,163.1,70.5],[201.28,201.92,"Initiativen",34,-9.5,-1.7,null,0,0,159.4,66.9],[201.94,202.18,"gegen",34,1.7,-1.7,null,0,0,143.4,69.2],[202.22,202.68,"rechts.",34,-1.7,-0.2,null,0,1,166.4,59.0],[202.7,202.88,"Das",35,-0.2,0.8,null,0,0,149.4,61.1],[202.9,203.06,"von",35,2.3,0.8,null,0,0,145.4,64.4],[203.1,203.72,"Franziska",35,4.7,-1.0,null,0,0,146.7,64.4],[203.74,204.17,"Giffey",35,null,-0.1,null,0,0,141.9,64.9],[204.21,205.35,"vorgeschlagene",35,-2.0,1.1,null,0,0,133.4,63.4],[205.39,206.69,"Demokratiefördergesetz",35,-17.6,2.3,null,0,0,124.8,65.6],[206.73,206.87,"ist",35,-0.1,19.1,null,0,0,123.8,65.5],[206.91,207.23,"dafür",35,38.4,19.1,null,0,0,121.8,65.0],[207.27,207.41,"ein",35,58.6,38.4,null,1,0,142.2,66.9],[207.46,208.0,"guter",35,77.7,38.4,null,1,0,135.2,63.1],[208.02,208.22,"und",35,null,38.4,null,1,0,124.6,64.9],[208.24,208.8,"richtiger",35,null,36.0,null,1,0,127.8,64.9],[208.82,209.32,"Schritt,",35,36.0,12.2,null,1,0,127.1,60.0],[209.34,209.54,"liebe",35,12.2,10.6,null,1,0,110.3,63.8],[209.56,209.72,"Frau",35,7.8,11.4,null,1,0,111.0,68.3],[209.76,212.29,"Ministerin.",35,-29.3,12.2,null,0,2,151.0,61.1],[212.27,212.63,"Wir",36,10.6,12.2,null,0,1,163.0,65.5],[212.67,212.93,"brauchen",36,21.1,10.6,null,0,1,189.3,70.3],[212.95,213.11,"einen",36,38.0,10.6,null,0,1,167.4,65.0],[213.15,213.43,"starken",36,52.9,10.6,null,0,1,186.8,70.7],[213.45,214.79,"Sozialstaat.",36,1.7,1.7,null,0,1,199.5,61.1],[214.81,214.91,"Und",37,-20.8,-20.8,null,0,0,177.9,71.3],[214.97,215.09,"was",37,-27.1,-27.1,null,0,1,200.5,63.8],[215.13,215.29,"machen",37,-32.8,-27.1,null,0,1,235.9,68.5],[215.31,215.39,"wir",37,-35.3,-27.1,null,0,1,207.4,70.6],[215.41,215.51,"denn",37,-29.7,-27.1,null,0,1,193.1,70.5],[215.55,215.65,"mit",37,-10.3,-10.3,null,0,0,176.4,70.4],[215.69,215.87,"diesem",37,8.8,-10.3,null,0,0,162.8,71.2],[215.91,217.07,"Haushalt?",37,20.6,-10.3,null,0,0,141.1,59.8],[217.1,217.27,"Wir",38,-5.8,-10.3,null,0,1,209.0,70.0],[217.34,218.08,"investieren",38,-22.9,-15.1,null,0,0,199.9,68.9],[218.12,218.3,"in",38,-15.1,-15.1,null,0,1,207.7,70.4],[218.34,218.68,"Bildung",38,-31.1,-15.1,null,0,0,219.6,71.0],[218.72,218.88,"und",38,-19.8,-15.9,null,0,0,216.3,66.3],[218.94,219.4,"Kitas,",38,7.2,-15.9,null,0,0,185.2,67.8],[219.42,219.56,"wir",38,13.4,-19.8,null,0,1,183.6,68.5],[219.6,220.0,"investieren",38,-15.9,-15.9,null,0,0,202.4,65.5],[220.04,220.16,"in",38,-30.6,-11.2,null,0,1,189.1,69.7],[220.18,220.32,"einen",38,-33.2,-13.6,null,0,1,194.8,69.6],[220.36,220.78,"sozialen",38,-11.2,-15.9,null,0,1,195.7,69.4],[220.82,221.46,"Arbeitsmarkt,",38,9.0,-30.6,null,0,0,178.5,66.0],[221.5,221.64,"wir",38,-13.6,-25.3,null,0,0,179.2,69.1],[221.68,222.2,"investieren",38,-31.2,-13.6,null,0,0,187.4,65.9],[222.24,222.34,"in",38,-31.4,-13.6,null,0,1,174.3,71.1],[222.36,222.6,"ein",38,-25.3,-13.6,null,0,1,199.2,65.7],[222.64,223.34,"umfassendes",38,10.6,-9.8,null,0,0,191.5,65.0],[223.4,224.46,"Rentenpaket",38,3.0,-9.5,null,0,0,166.5,61.0],[224.51,224.93,"und",38,-9.8,1.2,null,0,0,193.8,60.2],[224.95,225.09,"wir",38,-9.5,3.0,null,0,0,165.3,71.4],[225.13,225.61,"investieren",38,1.2,3.0,null,0,0,168.1,66.4],[225.65,225.75,"in",38,9.6,9.6,null,0,0,150.8,69.2],[225.77,225.93,"eine",38,15.0,12.9,null,0,0,146.8,58.5],[225.97,226.89,"Krankenversicherung,",38,24.8,12.9,null,0,0,152.8,66.4],[226.93,227.01,"in",38,15.6,12.9,null,0,0,141.6,72.8],[227.03,227.21,"der",38,12.9,13.9,null,0,0,147.1,66.2],[227.25,227.91,"Arbeitgeber",38,-19.3,-3.2,null,0,0,152.1,67.4],[227.93,228.15,"und",38,-33.4,-20.6,null,0,0,146.0,65.6],[228.17,229.19,"Arbeitnehmer",38,null,-22.7,null,0,0,142.7,65.5],[229.21,229.67,"wieder",38,-21.9,-22.7,null,0,1,149.4,66.5],[229.71,230.03,"gleich",38,-25.4,-22.7,null,0,0,142.1,64.4],[230.05,230.37,"viel",38,-23.5,-21.3,null,0,0,149.5,64.4],[230.41,231.11,"einzahlen.",38,-20.6,-20.6,null,0,0,144.1,64.9],[231.13,231.6,"Alles",39,33.9,11.9,null,0,1,171.4,64.0],[231.63,232.14,"Punkte,",39,36.1,11.9,null,0,1,158.8,65.7],[232.16,232.28,"die",39,31.0,11.9,null,0,1,159.0,67.9],[232.32,232.64,"richtig",39,11.9,11.9,null,0,0,172.2,63.6],[232.68,232.9,"sind,",39,-0.1,-0.1,null,0,0,124.3,65.6],[232.92,233.12,"liebe",39,-19.6,-0.1,null,0,0,132.9,66.7],[233.14,233.46,"Kolleginnen",39,-35.9,-0.1,null,0,0,124.5,69.1],[233.5,233.58,"und",39,-35.7,-0.1,null,0,0,133.6,71.5],[233.6,234.8,"Kollegen.",39,18.3,18.3,null,0,0,131.3,61.1],[234.82,234.96,"Und",40,24.9,18.3,null,0,1,205.3,71.6],[235.0,235.16,"auch",40,21.9,18.3,null,0,1,225.8,70.4],[235.18,235.76,"hier",40,26.3,18.3,null,0,0,178.5,61.9],[236.28,236.56,"Und",41,11.4,11.4,null,0,1,171.0,67.7],[236.6,236.7,"auch",41,2.6,2.6,null,0,1,204.9,69.1],[236.74,236.88,"hier",41,0.7,0.7,null,0,1,208.5,67.7],[236.9,237.1,"werden",41,-3.4,-3.4,null,0,0,207.9,69.8],[237.14,237.26,"wir",41,-3.9,-3.7,null,0,0,199.7,70.6],[237.3,237.48,"mehr",41,-3.7,-3.9,null,0,0,207.7,63.3],[237.52,237.68,"tun",41,-6.8,-6.8,null,0,0,240.6,73.6],[237.72,238.09,"müssen.",41,-27.8,-27.8,null,0,0,140.7,60.1],[238.1,238.24,"Und",42,-34.0,-34.0,null,0,0,176.4,62.2],[238.29,238.45,"wir",42,-37.0,-34.3,null,0,0,133.3,65.6],[238.46,238.71,"werden",42,-39.0,-34.3,null,0,0,195.2,68.7],[238.73,238.89,"mehr",42,-37.8,-34.3,null,0,0,129.7,60.9],[238.93,239.63,"tun.",42,-34.3,-35.6,null,0,0,128.4,56.5],[239.65,239.87,"Meine",43,-32.5,-33.4,null,0,1,208.8,63.6],[239.91,240.41,"Fraktion",43,4.9,-13.8,null,0,0,191.5,66.8],[240.43,240.63,"und",43,null,8.6,null,0,0,179.0,65.4],[240.67,241.03,"ich",43,13.7,8.6,null,0,0,161.5,58.2],[241.07,241.61,"werden",43,13.1,8.6,null,0,1,133.3,64.4],[241.65,242.11,"weiter",43,12.3,-4.8,null,0,1,188.1,66.0],[242.13,242.41,"alles",43,-21.9,-4.8,null,0,1,170.2,65.9],[242.45,242.73,"dafür",43,-28.2,-21.9,null,0,0,156.0,61.5],[242.77,243.18,"tun,",43,-31.7,-21.9,null,0,0,155.6,60.9],[243.2,243.4,"dass",43,null,-21.9,null,0,0,129.3,60.1],[243.43,243.66,"die",43,null,-3.5,null,0,0,132.8,57.9],[243.7,244.38,"Renten",43,13.7,-3.5,null,0,0,143.7,67.3],[244.42,245.02,"langfristig",43,6.1,-3.5,null,0,0,161.5,63.5],[245.06,245.62,"stabilisiert",43,-3.5,-15.5,null,0,0,137.8,66.0],[245.66,246.0,"werden.",43,-27.5,-3.5,null,0,0,121.8,65.2],[246.04,246.18,"Wir",44,-33.5,-3.5,null,0,0,151.3,70.3],[246.24,246.62,"werden",44,-27.9,-3.5,null,0,1,138.3,68.1],[246.66,247.16,"weiter",44,37.1,10.4,null,0,0,172.5,65.2],[247.2,247.5,"alles",44,25.3,10.4,null,0,0,180.6,65.5],[247.54,247.86,"dafür",44,18.0,10.4,null,0,0,159.0,63.8],[247.88,248.47,"tun,",44,10.4,14.2,null,0,0,162.8,59.6],[248.49,248.71,"dass",44,4.9,7.9,null,0,0,147.0,64.3],[248.73,248.93,"der",44,5.4,5.1,null,0,0,154.2,69.4],[248.97,249.93,"Mindestlohn",44,null,3.1,null,0,0,177.4,67.3],[249.97,250.49,"deutlicher",44,-40.2,2.8,null,0,0,190.3,67.3],[250.53,250.91,"steigt",44,-11.0,-4.9,null,0,0,173.1,67.2],[250.95,251.13,"als",44,1.2,-16.5,null,0,0,162.5,65.5],[251.17,251.83,"bisher,",44,4.4,-21.9,null,0,0,169.7,65.3],[251.85,251.97,"so",44,-21.9,-21.9,null,0,1,125.6,61.6],[251.99,252.29,"schnell",44,-27.6,-21.9,null,0,1,168.3,70.4],[252.31,252.47,"wie",44,-29.2,-21.9,null,0,0,152.5,71.0],[252.51,252.99,"möglich",44,-27.6,-21.9,null,0,0,159.5,66.7],[253.05,253.4,"auf",44,-19.4,-19.4,null,0,1,157.5,58.2],[253.42,253.9,"12",44,-8.8,-8.8,null,0,1,162.0,66.6],[253.94,254.16,"Euro",44,1.7,-0.6,null,0,0,151.9,70.2],[254.2,254.28,"in",44,0.1,0.1,null,0,0,140.5,71.4],[254.32,254.42,"der",44,-0.6,1.7,null,0,0,142.2,58.1],[254.46,254.88,"Stunde,",44,10.9,10.9,null,0,0,133.2,69.4],[254.9,255.12,"liebe",44,30.7,13.8,null,0,0,134.9,65.9],[255.14,255.52,"Kolleginnen",44,29.1,13.8,null,0,0,129.2,69.4],[255.54,255.62,"und",44,27.2,13.8,null,0,0,128.7,70.7],[255.66,256.6,"Kollegen.",44,13.8,13.8,null,0,0,122.7,54.3],[256.58,258.07,"Drittens.",45,-28.9,-28.9,null,0,0,186.8,58.8],[258.08,258.18,"Wir",46,-39.0,-28.9,null,0,0,152.2,64.3],[258.2,258.53,"brauchen",46,-41.4,-28.9,null,0,0,194.5,70.9],[258.57,258.71,"ein",46,-42.1,-28.9,null,0,0,197.3,60.4],[258.75,259.15,"starkes",46,-17.1,-17.1,null,0,0,193.6,68.7],[259.19,260.33,"Europa.",46,12.4,0.3,null,0,0,188.7,61.7],[260.35,261.03,"Europa",47,29.3,0.3,null,0,0,193.3,67.4],[261.09,261.53,"ist",47,4.8,0.3,null,0,1,192.4,60.7],[261.59,262.03,"unser",47,0.3,0.3,null,0,0,172.9,66.2],[262.07,262.45,"bester",47,-33.1,0.3,null,0,0,161.5,62.2],[262.47,263.01,"Schutz",47,-32.6,0.3,null,0,0,157.2,57.4],[263.05,263.38,"gegen",47,-4.3,0.3,null,0,0,158.9,66.1],[263.42,263.65,"einen",47,11.8,11.8,null,0,0,142.1,70.2],[263.71,264.54,"Rückfall",47,15.6,12.0,null,0,0,146.7,61.9],[264.6,264.94,"in",47,12.0,14.6,null,0,0,147.7,66.6],[265.0,265.76,"Nationalismus",47,14.6,15.6,null,0,0,138.0,65.2],[265.8,265.98,"und",47,17.7,17.7,null,0,0,119.7,59.5],[266.0,266.64,"Krieg.",47,40.6,17.7,null,0,0,158.9,57.6],[266.66,267.14,"Dafür",48,60.6,17.7,null,1,0,165.5,66.4],[267.16,267.4,"brauchen",48,56.2,17.7,null,1,0,144.3,68.3],[267.42,267.56,"wir",48,11.4,11.4,null,0,0,135.4,70.0],[267.58,267.78,"eine",48,-7.6,-4.0,null,0,1,157.6,66.5],[267.82,269.02,"handlungsfähige",48,-21.6,-4.2,null,0,1,158.2,66.5],[269.08,269.61,"Europäische",48,-4.2,-7.6,null,0,0,146.2,67.2],[269.65,270.41,"Union.",48,-4.0,-16.7,null,0,0,157.5,65.5],[270.43,270.51,"Wir",49,-16.7,-19.1,null,0,0,189.8,72.7],[270.55,270.75,"wissen",49,-26.4,-10.4,null,0,0,199.1,69.7],[270.79,270.97,"noch",49,-29.0,-18.0,null,0,0,204.8,69.7],[270.99,271.87,"eines.",49,null,-18.0,null,0,0,187.0,55.1],[271.89,272.07,"Bis",50,11.6,-13.9,null,0,1,199.2,65.7],[272.11,272.85,"Dezember",50,-19.4,-7.9,null,0,0,212.2,64.0],[273.71,274.01,"ist",51,-8.5,-6.6,null,0,0,173.0,67.2],[274.03,274.15,"nicht",51,-7.4,-6.6,null,0,0,197.0,73.1],[274.17,274.27,"mehr",51,-5.7,-7.4,null,0,0,200.1,69.8],[274.29,274.43,"lange",51,-4.4,-6.6,null,0,0,173.3,72.9],[274.47,275.13,"hin,",51,null,-5.1,null,0,0,196.5,51.4],[275.15,275.41,"müssen",51,null,-0.9,null,0,0,153.5,67.8],[275.45,275.57,"in",51,null,1.5,null,0,0,168.6,62.6],[275.61,276.26,"Kernfragen",51,8.7,1.5,null,0,0,183.6,67.4],[276.3,276.4,"der",51,2.6,0.4,null,0,0,133.2,67.3],[276.44,276.88,"Reform",51,0.4,-0.6,null,0,0,144.7,68.4],[276.92,277.36,"Europas",51,-1.6,-1.6,null,0,0,136.7,65.1],[277.4,278.0,"Entscheidungen",51,-33.5,-33.5,null,0,0,130.8,65.9],[278.04,278.46,"fallen,",51,-35.5,-33.5,null,0,0,133.8,68.9],[278.48,278.86,"sonst",51,-37.0,-33.5,null,0,0,144.1,59.3],[278.88,279.2,"könnte",51,-35.2,-33.5,null,0,0,152.2,67.1],[279.24,279.76,"sich",51,2.1,2.1,null,0,0,155.0,51.7],[279.8,280.11,"dieses",51,20.9,20.9,null,0,0,174.5,63.9],[280.14,281.23,"Reformfenster",51,40.8,20.9,null,0,0,128.4,62.5],[281.25,281.77,"schneller",51,70.2,20.9,null,1,0,124.0,64.9],[281.79,282.49,"schließen,",51,53.5,20.9,null,1,0,124.5,58.5],[282.55,282.75,"als",51,9.1,19.8,null,1,0,123.4,62.1],[282.79,282.99,"uns",51,10.6,14.1,null,1,0,138.0,60.5],[283.03,283.19,"lieb",51,14.1,10.6,null,1,0,106.4,62.3],[283.23,283.91,"ist.",51,19.8,9.1,null,1,0,106.7,52.5],[283.93,283.99,"Und",52,6.8,6.8,null,0,0,174.5,73.9],[284.01,284.26,"dabei",52,2.7,6.8,null,0,0,200.8,72.1],[284.3,284.48,"muss",52,2.5,5.3,null,0,1,208.4,67.7],[284.52,285.62,"gelten,",52,5.3,2.7,null,0,1,193.3,54.3],[285.64,285.78,"so",52,9.0,2.5,null,0,1,206.7,69.7],[285.82,286.06,"wichtig",52,-0.1,2.5,null,0,0,216.9,68.9],[286.08,286.24,"und",52,-6.7,-0.1,null,0,1,195.6,69.6],[286.26,287.5,"wünschenswert",52,-16.4,-6.3,null,0,0,135.2,59.3],[287.54,288.1,"gemeinsame",52,2.5,-6.7,null,0,0,184.7,71.4],[288.16,288.5,"Lösungen",52,-6.3,-6.7,null,0,0,176.9,70.0],[288.55,288.62,"in",52,-7.6,-6.3,null,0,0,150.9,67.5],[288.64,288.73,"der",52,-8.6,-6.3,null,0,0,166.3,69.2],[288.77,289.93,"Flüchtlingspolitik",52,3.8,-7.6,null,0,0,124.7,61.7],[289.95,290.05,"sind,",52,-1.1,-7.6,null,0,0,222.1,46.0],[290.03,290.31,"Die",53,-8.1,-1.1,null,0,1,157.4,64.1],[290.33,291.29,"Flüchtlingsdebatte",53,-9.0,0.6,null,0,0,184.2,66.9],[291.35,291.63,"darf",53,0.6,-1.1,null,0,0,160.1,65.7],[291.67,291.97,"nicht",53,7.9,-8.1,null,0,0,158.2,63.2],[292.01,292.51,"notwendige",53,6.3,-8.9,null,0,0,154.7,64.4],[292.55,293.01,"Fortschritte",53,-8.9,-8.9,null,0,0,142.2,63.1],[293.05,293.21,"in",53,-26.8,-26.8,null,0,0,138.7,65.1],[293.25,293.55,"anderen",53,-31.5,-26.8,null,0,0,140.3,70.0],[293.59,294.21,"Bereichen",53,-29.3,-26.8,null,0,0,136.2,64.3],[294.25,294.93,"ausbremsen",53,-29.9,-26.8,null,0,0,134.5,62.6],[294.97,295.2,"und",53,0.9,0.9,null,0,1,186.9,63.3],[295.23,296.0,"verhindern.",53,9.7,9.2,null,0,0,154.6,62.6],[296.02,296.16,"Wir",54,31.1,9.2,null,0,1,126.8,61.0],[296.2,296.72,"brauchen",54,36.8,9.2,null,0,1,175.7,67.7],[296.76,297.02,"jetzt",54,9.2,9.7,null,0,0,173.8,57.6],[297.04,297.48,"dringend",54,2.3,26.9,null,0,0,156.4,68.0],[297.52,297.68,"eine",54,5.6,21.9,null,0,0,161.0,70.3],[297.72,298.0,"Reform",54,26.9,13.6,null,0,0,172.1,68.4],[298.02,298.12,"der",54,34.6,13.6,null,0,0,159.9,64.0],[298.16,298.46,"Wirtschafts-",54,21.9,21.9,null,0,0,174.1,64.4],[298.48,298.6,"und",54,13.6,26.9,null,0,0,158.0,64.7],[298.64,299.56,"Währungsunion.",54,12.5,30.6,null,0,0,151.0,65.8],[299.6,299.7,"Wir",55,30.6,21.9,null,0,0,140.6,65.1],[299.72,300.08,"brauchen",55,35.7,13.6,null,0,0,172.0,68.4],[300.1,300.34,"jetzt",55,38.9,12.5,null,0,0,172.9,56.5],[300.36,300.74,"dringend",55,11.9,14.6,null,0,0,160.6,68.5],[300.78,300.92,"eine",55,8.9,11.9,null,0,0,160.0,69.8],[300.94,301.26,"gerechte",55,10.5,10.5,null,0,0,167.4,62.5],[301.3,301.74,"Besteuerung",55,14.6,8.9,null,0,0,158.0,65.2],[301.78,301.92,"von",55,8.3,8.9,null,0,0,160.5,68.6],[301.96,302.98,"Unternehmern,",55,4.3,8.3,null,0,0,149.5,61.0],[303.01,303.36,"gerade",55,7.9,8.3,null,0,1,168.7,68.6],[303.39,303.52,"der",55,10.6,7.9,null,0,0,141.1,65.3],[303.57,303.91,"großen",55,-30.9,4.3,null,0,1,175.6,65.5],[303.95,305.15,"Internetkonzerne,",55,9.6,-30.9,null,0,0,165.4,65.4],[305.17,305.37,"mit",55,-32.8,-30.9,null,0,1,176.4,62.2],[305.39,305.61,"einer",55,-41.4,-30.9,null,0,0,172.5,71.9],[305.65,306.17,"europäischen",55,-42.0,-8.5,null,0,0,174.5,65.5],[306.21,307.03,"Digitalsteuer.",55,-8.5,-8.5,null,0,0,175.0,66.9],[307.07,307.21,"Und",56,-5.9,-5.9,null,0,0,201.2,66.0],[307.25,307.39,"wir",56,-3.6,-3.6,null,0,1,151.6,61.8],[307.41,308.13,"brauchen",56,1.5,-0.3,null,0,0,186.8,59.2],[308.19,308.45,"faire",56,-0.3,-0.3,null,0,0,192.9,67.5],[308.49,309.35,"Bedingungen",56,19.7,-0.3,null,0,0,180.8,63.1],[309.39,309.83,"für",56,10.3,-0.3,null,0,0,174.9,65.4],[309.87,310.43,"Arbeitnehmer",56,-12.1,-0.3,null,0,0,172.3,68.6],[310.49,310.54,"im",56,-16.7,8.3,null,0,0,null,72.2],[310.58,311.26,"Binnenmarkt",56,-1.5,3.8,null,0,0,154.5,63.5],[311.3,311.54,"durch",56,10.6,3.8,null,0,0,158.5,63.1],[311.58,312.04,"gemeinsame",56,8.3,3.8,null,0,0,144.3,66.0],[312.08,312.54,"Standards",56,3.8,3.8,null,0,0,136.3,63.6],[312.56,312.74,"für",56,4.1,3.8,null,0,0,130.0,69.9],[312.78,313.34,"Mindestlöhne",56,3.3,3.3,null,0,0,127.6,64.9],[313.38,313.5,"in",56,3.3,3.3,null,0,0,110.4,68.9],[313.54,314.0,"Europa.",56,-1.3,-1.3,null,0,0,138.3,64.8],[314.04,314.18,"Und",57,-9.4,-1.3,null,0,0,171.4,66.8],[314.2,314.4,"nicht",57,-13.5,-1.3,null,0,0,163.5,60.9],[314.44,315.42,"zuletzt,",57,-8.4,-1.3,null,0,0,179.0,52.7],[315.44,315.54,"wir",57,6.0,6.0,null,0,0,124.0,68.3],[315.56,316.04,"brauchen",57,6.2,6.0,null,0,0,132.4,63.4],[316.06,316.24,"einen",57,18.2,6.2,null,0,0,113.1,64.5],[316.26,316.8,"europäischen",57,18.9,10.3,null,0,0,140.9,62.8],[316.84,317.82,"Zukunftshaushalt,",57,5.8,18.2,null,0,0,160.9,65.0],[317.8,318.18,"in",58,10.3,18.9,null,0,0,137.2,55.3],[318.33,318.46,"denen",58,20.3,20.3,null,0,0,142.5,69.3],[318.51,318.95,"wir",58,26.8,20.3,null,0,0,139.0,57.9],[318.98,319.23,"mehr",58,24.9,20.3,null,0,0,132.9,67.7],[319.27,319.95,"investieren",58,26.0,20.3,null,0,2,129.0,63.4],[319.99,320.21,"als",58,10.8,15.2,null,0,2,116.6,57.0],[320.23,320.67,"bisher.",58,-0.4,15.2,null,0,0,145.5,66.0],[320.69,320.97,"Und",59,8.9,15.2,null,0,0,157.3,60.7],[320.99,321.31,"lieber",59,15.2,10.8,null,0,0,128.4,66.0],[321.35,321.79,"Kollege",59,23.6,8.9,null,0,0,109.8,66.0],[321.83,322.61,"Dobrindt,",59,48.6,8.9,null,0,0,136.7,60.1],[322.63,322.67,"im",59,6.2,6.2,null,0,0,null,67.8],[322.71,322.97,"Moment",59,1.5,1.5,null,0,0,159.6,65.8],[323.01,323.13,"sehe",59,0.7,1.4,null,0,0,132.1,73.5],[323.17,323.25,"ich",59,1.4,1.1,null,0,0,133.6,63.5],[323.29,323.39,"ihn",59,1.1,0.7,null,0,0,121.4,72.8],[323.41,323.59,"nicht.",59,-2.2,-1.9,null,0,0,123.4,62.4],[323.63,323.69,"Was",60,-3.3,-1.9,null,0,0,131.2,52.8],[323.73,323.85,"wir",60,-3.3,-1.9,null,0,0,128.7,74.8],[323.89,324.03,"nicht",60,-1.9,-2.2,null,0,0,129.3,59.0],[324.07,324.37,"brauchen,",60,-0.2,-2.5,null,0,0,118.2,67.7],[324.41,324.51,"ist",60,2.0,-2.5,null,0,0,121.2,65.0],[324.55,324.67,"eine",60,-2.5,-2.5,null,0,0,187.0,58.8],[324.73,325.15,"Verdopplung",60,-27.2,-4.2,null,0,0,111.8,64.4],[325.19,325.31,"des",60,-27.1,-4.2,null,0,0,172.8,59.7],[325.35,326.41,"Verteidigungshaushalts.",60,-28.9,-4.2,null,0,0,105.5,62.9],[326.43,326.55,"Dann",61,-4.2,-4.2,null,0,1,106.1,69.7],[326.57,326.69,"haben",61,2.1,2.1,null,0,1,106.1,67.5],[326.71,326.81,"wir",61,8.9,8.9,null,0,1,120.7,61.8],[326.83,326.91,"für",61,9.4,9.4,null,0,1,108.9,68.6],[326.93,327.07,"alle",61,11.7,11.3,null,0,2,110.3,71.9],[327.09,327.3,"anderen",61,11.3,11.7,null,0,2,102.1,68.1],[327.32,327.48,"Sachen",61,11.9,11.9,null,0,1,111.6,65.2],[327.54,327.77,"nämlich",61,22.3,11.9,null,0,1,118.6,67.2],[327.8,327.93,"kein",61,23.5,15.8,null,0,0,134.0,72.8],[327.95,328.1,"Geld",61,19.0,17.4,null,0,0,109.8,62.8],[328.12,330.12,"mehr.",61,-2.2,19.0,null,0,0,196.2,60.6],[330.14,332.18,"Zusammengefasst,",62,15.8,17.4,null,0,0,180.8,63.5],[332.2,332.38,"ein",62,null,15.8,null,0,null,151.4,67.8],[332.42,332.86,"wehrhafter",62,null,null,null,0,null,195.4,69.9],[332.9,334.32,"Rechtsstaat,",62,null,null,null,0,null,155.0,54.5],[334.34,334.54,"ein",62,null,null,null,0,null,139.1,62.8],[334.58,334.94,"starker",62,null,null,null,0,null,187.0,70.1],[334.96,336.23,"Sozialstaat",62,null,0.1,null,0,null,154.3,60.4],[336.27,336.39,"und",62,0.1,-1.7,null,0,0,140.1,69.6],[336.4,336.57,"ein",62,0.6,0.1,null,0,0,149.4,67.9],[336.58,337.47,"handlungsfähiges",62,-34.0,0.3,null,0,0,168.9,67.6],[337.51,338.53,"Europa",62,-3.5,0.6,null,0,0,140.2,55.5],[338.57,338.69,"sind",62,6.8,6.8,null,0,0,152.9,62.0],[338.73,338.81,"die",62,11.3,11.3,null,0,0,150.6,73.6],[338.85,339.41,"Garanten",62,18.9,17.9,null,0,0,163.3,64.2],[339.43,339.55,"für",62,20.0,17.9,null,0,0,133.9,70.8],[339.57,339.75,"eine",62,21.5,17.9,null,0,0,137.8,65.5],[339.81,340.05,"gute",62,17.9,17.9,null,0,0,166.5,62.4],[340.11,340.63,"Zukunft",62,8.2,8.2,null,0,0,152.1,63.2],[340.67,340.99,"unseres",62,2.5,8.2,null,0,0,129.5,64.6],[341.03,341.41,"Landes",62,4.1,8.2,null,0,0,141.2,64.7],[341.43,341.53,"und",62,6.5,8.2,null,0,0,137.4,61.8],[341.57,341.83,"seiner",62,11.0,11.0,null,0,0,153.8,68.2],[341.85,342.39,"Bürgerinnen",62,15.0,11.3,null,0,0,120.7,67.4],[342.43,342.59,"und",62,11.3,15.0,null,0,0,120.6,61.7],[342.63,343.57,"Bürger.",62,18.9,18.9,null,0,0,143.8,60.1],[343.59,343.77,"Sie",63,24.8,19.9,null,0,0,183.9,70.3],[343.79,343.97,"sind",63,22.9,21.4,null,0,0,175.4,68.4],[343.99,344.19,"das",63,21.8,21.8,null,0,0,159.1,61.3],[344.23,344.71,"Bollwerk",63,19.9,22.9,null,0,0,161.6,67.8],[344.75,345.04,"gegen",63,21.4,22.9,null,0,0,150.0,67.8],[345.05,345.42,"alle.",63,29.9,24.4,null,0,0,120.9,60.6],[346.29,347.97,"Demokratie,",64,26.3,24.4,null,0,0,165.4,60.9],[348.01,348.15,"die",64,24.4,24.4,null,0,0,159.4,68.9],[348.2,348.43,"unser",64,28.6,24.4,null,0,0,157.3,69.5],[348.48,349.42,"Deutschland",64,24.2,24.2,null,0,0,127.9,57.3],[349.44,349.54,"und",64,21.0,22.1,null,0,0,163.8,60.5],[349.58,349.7,"die",64,21.4,21.4,null,0,0,144.8,69.2],[349.74,349.92,"unsere",64,22.1,21.0,null,0,0,133.5,73.5],[349.96,350.38,"Europa",64,17.5,20.1,null,0,0,113.6,65.3],[350.42,350.8,"zerstören",64,20.1,20.1,null,0,0,121.6,66.8],[350.84,351.16,"wollen.",64,17.0,20.1,null,0,0,97.7,64.2],[351.2,351.26,"In",65,19.9,19.9,null,0,0,155.8,75.9],[351.3,351.5,"diesem",65,21.7,20.0,null,0,0,138.7,69.0],[351.55,351.97,"Sinne",65,26.9,19.9,null,0,0,146.1,64.5],[352.01,352.19,"gute",65,5.6,20.8,null,0,0,133.9,67.8],[352.23,356.58,"Beratung.",65,null,21.7,null,0,null,117.9,59.4],[356.6,356.7,"Der",66,null,null,null,0,null,169.0,76.6],[356.74,357.0,"nächste",66,null,null,null,0,null,161.1,71.7],[357.06,357.32,"Redner",66,null,null,null,0,null,145.5,71.5],[357.36,357.52,"ist",66,null,null,null,0,null,136.2,68.6],[357.54,357.66,"der",66,null,null,null,0,null,136.6,65.1],[357.7,358.14,"Kollege",66,null,null,null,0,null,118.9,70.0],[358.26,358.46,"Johannes",66,null,null,null,0,null,123.4,62.1],[358.48,358.87,"Kahrs,",66,null,null,null,0,null,111.3,63.9],[358.89,359.81,"SPD-Fraktion.",66,null,null,null,0,null,111.8,59.8]],"en":{"0":"Mr President!","1":"Dear colleagues!","2":"Ladies and gentlemen!","3":"We can tell in this debate that this is about an important budget, a budget involving a lot of money, and at the same time we can tell that it is about much more.","4":"It is about the question of what kind of country, yes, what kind of","5":"we want to live in, and many, no, I would say most people in this chamber and most people in the country want, as I do, a democratic, social and liberal Germany in which, on the basis of our constitution, all 82 million citizens have the same rights and duties.","6":"And all those who disregard and despise","7":"our Basic Law should know one thing.","8":"There are more of us.","9":"We will fight with heart and mind for our country and for our democracy, dear colleagues.","10":"Because there is one thing we should briefly remind ourselves of.","11":"In Germany, at the federal and state level, we have","12":"17 democratic interior ministers, we have 17 democratic justice ministers, and we have 17 democratic heads of government.","13":"We democrats hold all the levers of political power.","14":"So we also have every means to prevent the right-wing brown front from spreading any further in our country.","15":"Because since Chemnitz at the latest","16":"it has become absolutely clear:","17":"Nazis, hooligans, Pegida and the AfD demonstrate together and act together, dear colleagues.","18":"So, addressed to the AfD:","19":"You do not belong in the first, second and third rows of the Bundestag.","20":"You belong on the first, second and third pages of this country's reports on the protection of the constitution, dear colleagues.","21":"And all of this underlines one thing.","22":"We need a strong, capable, democratic and social state under the rule of law.","23":"We are prepared to invest in that.","24":"We are also prepared to invest more in that, dear colleagues.","25":"Let me name three points that are in this budget.","26":"First.","27":"We need a state that can defend itself.","28":"In the coalition we have already agreed a substantial increase for the police, customs and the judiciary.","29":"We must and we will keep going there.","30":"One thing is fundamental here.","31":"The democratic state's monopoly on the use of force must apply always and everywhere.","32":"And it must be exercised without distinction.","33":"Against Nazis and violent offenders just as against Islamists and against seriously criminal family clans, dear colleagues.","34":"A democratic state that can defend itself also requires investment in prevention and in initiatives against the far right.","35":"The Democracy Promotion Act proposed by Franziska Giffey is a good and right step in that direction, dear Minister.","36":"We need a strong welfare state.","37":"And what are we doing with this budget?","38":"We are investing in education and daycare, we are investing in a social labour market, we are investing in a comprehensive pension package, and we are investing in health insurance into which employers and employees once again pay equal shares.","39":"All points that are right, dear colleagues.","40":"And here too","41":"And here too we will have to do more.","42":"And we will do more.","43":"My parliamentary group and I will continue to do everything to stabilise pensions in the long term.","44":"We will continue to do everything to make the minimum wage rise more markedly than before, to 12 euros an hour as quickly as possible, dear colleagues.","45":"Third.","46":"We need a strong Europe.","47":"Europe is our best protection against a relapse into nationalism and war.","48":"For that we need a European Union that is able to act.","49":"We know one more thing.","50":"By December,","51":"which is not far off, decisions must be taken on core questions of European reform, or this window for reform could close faster than we would like.","52":"And here the principle must be, however important and desirable joint solutions in refugee policy are,","53":"the refugee debate must not slow down or block necessary progress in other areas.","54":"We urgently need a reform of the Economic and Monetary Union now.","55":"We urgently need fair taxation of businesses now, especially of the big internet companies, through a European digital tax.","56":"And we need fair conditions for workers in the single market through common standards for minimum wages in Europe.","57":"And last but not least, we need a European budget for the future","58":"in which we invest more than before.","59":"And dear colleague Dobrindt, I don't see him at the moment.","60":"What we do not need is a doubling of the defence budget.","61":"Because then we would have no money left for anything else.","62":"In sum, a state under the rule of law that can defend itself, a strong welfare state and a Europe able to act are the guarantors of a good future for our country and its citizens.","63":"They are the bulwark against all","64":"[enemies of] democracy who want to destroy our Germany and our Europe.","65":"In this spirit, good deliberations.","66":"[The President:] The next speaker is our colleague Johannes Kahrs, SPD parliamentary group."}},"demo":{"speaker":"Frank Steffel","party":"cducsu","date":"2019-02-01","start":84.0,"end":109.0,"video":"demo_11048_7_84-109.mp4","offset":84.0,"cols":["t0","t1","w","sent","ang","angSm","named","ep","gest","pitch","loud"],"words":[[84.11,84.25,"und",6,11.9,10.7,null,0,0,108.0,66.7],[84.29,84.45,"dass",6,11.1,10.3,null,0,0,115.1,62.9],[84.49,84.61,"Sie",6,10.3,10.2,null,0,0,100.3,72.7],[84.67,84.75,"an",6,10.2,10.2,null,0,0,103.3,72.2],[84.79,84.87,"den",6,10.2,10.2,null,0,0,113.3,75.3],[84.91,85.23,"Lippen",6,-0.5,-0.5,null,0,0,127.0,65.5],[85.27,85.45,"von",6,-16.5,-12.5,null,0,0,98.1,69.6],[85.49,85.85,"Moskau",6,-12.5,-15.4,null,0,0,114.6,66.9],[85.89,86.23,"hängen,",6,-15.4,-16.5,null,0,0,113.7,67.4],[86.25,86.57,"fast",6,-24.7,-24.7,null,0,0,111.5,62.0],[86.61,87.07,"egal,",6,-30.9,-30.9,null,0,0,110.7,71.0],[87.1,87.24,"wer",6,-35.7,-35.7,null,0,0,121.7,66.4],[87.28,87.54,"dort",6,-51.4,-37.8,null,0,0,203.7,65.0],[87.58,88.22,"Verantwortung",6,-39.9,-39.9,null,0,0,94.9,64.1],[88.26,88.8,"trägt.",6,-40.1,-40.0,null,0,0,157.5,58.0],[89.71,92.71,"Sie",7,null,-40.1,null,0,null,161.1,66.9],[93.65,93.85,"müssen",7,null,null,null,0,null,174.9,67.6],[93.89,94.03,"das",7,null,null,null,0,null,171.0,66.4],[94.07,94.21,"ja",7,null,null,null,0,null,141.9,70.7],[94.25,94.35,"gar",7,null,null,null,0,null,163.6,70.6],[94.37,94.53,"nicht",7,null,null,null,0,null,159.5,64.0],[94.57,94.99,"kritisieren.",7,null,null,null,0,null,169.0,69.6],[95.03,95.13,"Das",8,null,null,null,0,null,173.9,64.4],[95.17,95.25,"ist",8,null,null,null,0,null,131.3,64.0],[95.29,95.37,"ja",8,null,null,null,0,null,158.6,74.4],[95.39,95.55,"auch",8,null,null,null,0,null,144.7,66.3],[95.59,95.85,"etwas,",8,null,null,null,0,null,159.8,65.4],[95.87,96.13,"womit",8,null,null,null,0,null,151.6,65.9],[96.17,96.31,"Sie",8,null,null,null,0,null,150.3,63.9],[96.35,96.78,"versuchen,",8,null,null,null,0,null,147.2,69.1],[96.79,96.93,"Ihre",8,null,null,null,0,null,135.6,70.6],[96.97,97.32,"Wählerinnen",8,null,-62.5,null,2,null,145.6,71.1],[97.33,97.44,"und",8,-63.1,-62.8,null,2,0,132.7,66.6],[97.48,97.74,"Wähler",8,-60.1,-63.1,null,2,1,146.6,67.0],[97.78,97.86,"zu",8,-62.5,-63.3,null,2,1,129.8,67.4],[97.9,98.2,"gewinnen.",8,-63.6,-63.1,null,2,1,150.2,69.9],[98.24,98.32,"Sie",9,-64.1,-62.5,null,2,1,null,58.9],[98.34,98.5,"können",9,-64.8,-62.5,null,2,1,143.6,71.0],[98.66,99.32,"sich",9,-35.0,-35.0,null,2,0,150.5,52.3],[99.34,99.38,"ja",9,-17.5,-17.5,null,0,0,null,59.4],[99.42,99.56,"auch",9,-15.5,-15.5,null,0,0,145.6,65.6],[99.6,99.8,"offen",9,-11.3,-11.3,null,0,0,147.0,69.0],[99.84,100.14,"dazu",9,-0.2,-0.2,null,0,1,128.5,67.9],[100.18,100.52,"bekennen.",9,5.9,5.9,null,0,1,160.0,69.9],[100.54,100.66,"Bei",10,11.1,8.5,null,0,1,163.0,73.1],[100.68,100.8,"der",10,13.6,12.3,null,0,1,136.5,68.9],[100.84,101.86,"AfD",10,31.8,22.7,"afd",0,1,156.1,68.1],[101.92,102.26,"wundert",10,null,49.6,null,1,null,200.2,70.0],[102.3,102.48,"mich",10,67.4,68.5,null,1,1,191.1,66.1],[102.52,102.72,"das",10,72.2,69.3,null,1,0,182.4,64.8],[102.76,102.94,"immer",10,69.5,69.6,null,1,0,169.2,71.8],[102.98,103.1,"noch",10,69.7,69.5,null,1,0,160.7,70.9],[103.14,103.26,"ein",10,69.0,69.5,null,1,1,139.2,64.1],[103.28,103.5,"Stück",10,70.2,69.0,null,1,1,163.1,65.7],[103.54,103.66,"bei",10,68.2,68.4,null,1,1,132.8,65.7],[103.7,103.84,"Ihnen,",10,68.4,68.2,null,1,1,142.7,71.4],[103.86,104.0,"Herr",10,66.2,66.2,null,1,0,130.7,66.6],[104.04,104.44,"Schlund,",10,36.8,44.1,null,0,0,132.1,69.5],[104.46,104.89,"weniger.",10,40.2,44.1,null,0,0,149.5,71.3],[104.91,105.15,"Man",11,43.5,44.1,null,0,0,126.0,64.9],[105.19,105.63,"spürte",11,44.1,44.1,null,0,0,139.3,69.0],[105.65,105.77,"in",11,46.1,46.1,null,1,0,145.4,69.5],[105.81,106.03,"Ihrer",11,47.2,46.6,null,1,0,127.0,69.5],[106.09,106.31,"Rede,",11,46.6,46.6,null,1,0,159.7,70.0],[106.35,106.47,"dass",11,46.9,46.6,null,1,0,117.7,64.7],[106.51,106.61,"Sie",11,48.3,46.6,null,1,0,127.2,67.3],[106.65,106.81,"eben",11,46.6,46.6,null,1,0,121.6,68.4],[106.85,106.93,"bis",11,28.5,28.5,null,0,0,124.1,62.4],[106.95,107.17,"1989",11,13.3,22.4,null,0,0,122.6,67.1],[107.25,108.89,"im",11,16.3,16.3,null,0,0,129.0,64.8],[108.93,109.89,"Regiment",11,7.1,14.8,null,0,0,125.4,62.4]],"en":{"6":"… no problem for you either that you are against NATO, that you carry a deeply felt anti-Americanism in your hearts, and that you hang on Moscow's every word, almost no matter who is in charge there.","7":"You don't have to criticise that at all.","8":"That is also something with which you try to win over your voters.","9":"You might as well admit it openly.","10":"With the AfD it still surprises me a little; with you, Mr Schlund, less so.","11":"One could sense in your speech that until 1989 you were at home in the NVA's Ernst Thälmann regiment.","12":"That was also the spirit in which you tried here …"},"steps":[{"t":85.07,"title":"Word-level alignment","desc":"Each spoken word has a start and an end time. That shared interval links the transcript, the audio and the video frame.","word":"Lippen"},{"t":93.75,"title":"Missing visual observation","desc":"The broadcast cuts away from the speaker. Head pose and gesture are recorded as missing for these words, not as zero.","word":"müssen"},{"t":98.05,"title":"Visible gesture","desc":"A ResNet-50 classifier labels each word's frame: no visible gesture, one hand, or two hands.","word":"gewinnen"},{"t":101.35,"title":"Explicit party naming","desc":"The rule matches AfD wherever it begins a word, so compounds such as AfD-Fraktion count. Addressing a member by name is measured separately.","word":"AfD"},{"t":102.85,"title":"Sustained AfD-flank episode","desc":"The head is turned to +45° or beyond. An episode continues through glances at the notes and up to two words without a pose estimate.","word":"immer"},{"t":106.2,"title":"Aligned audio","desc":"Pitch and loudness are measured on the same word interval. The speech-level outcomes use within-speech variation of the full audio.","word":"Rede"}]},"fig2":{"traces":{"afd":[[-3.75,9.06,0.94],[-3.25,9.28,1.03],[-2.75,11.15,1.0],[-2.25,11.76,1.05],[-1.75,14.83,1.04],[-1.25,15.7,1.0],[-0.75,15.88,0.93],[-0.25,14.2,0.93],[0.25,12.62,0.92],[0.75,12.32,1.09],[1.25,12.13,1.12],[1.75,11.18,1.04],[2.25,11.01,1.09],[2.75,10.95,1.06],[3.25,11.36,1.08],[3.75,11.87,0.99]],"cducsu":[[-3.75,2.26,0.84],[-3.25,2.83,0.87],[-2.75,2.1,0.87],[-2.25,3.59,0.8],[-1.75,4.56,0.79],[-1.25,4.65,0.69],[-0.75,4.12,0.69],[-0.25,4.33,0.72],[0.25,2.68,0.63],[0.75,3.13,0.76],[1.25,2.89,0.71],[1.75,2.7,0.73],[2.25,1.48,0.68],[2.75,2.11,0.8],[3.25,2.47,0.78],[3.75,2.85,0.82]],"fdp":[[-3.75,7.83,0.75],[-3.25,9.89,0.75],[-2.75,10.71,0.79],[-2.25,11.93,0.75],[-1.75,13.22,0.72],[-1.25,15.55,0.7],[-0.75,15.42,0.73],[-0.25,14.29,0.68],[0.25,11.0,0.71],[0.75,11.93,0.77],[1.25,10.95,0.75],[1.75,10.39,0.77],[2.25,10.77,0.77],[2.75,10.14,0.75],[3.25,10.83,0.78],[3.75,11.83,0.76]],"gruene":[[-3.75,-2.12,0.74],[-3.25,-3.08,0.74],[-2.75,-3.43,0.7],[-2.25,-4.91,0.71],[-1.75,-5.35,0.61],[-1.25,-5.74,0.62],[-0.75,-5.75,0.61],[-0.25,-5.15,0.57],[0.25,-4.22,0.54],[0.75,-4.73,0.6],[1.25,-4.78,0.63],[1.75,-3.68,0.68],[2.25,-2.93,0.65],[2.75,-2.52,0.68],[3.25,-2.55,0.66],[3.75,-2.23,0.71]],"linke":[[-3.75,-4.36,1.34],[-3.25,-6.55,1.34],[-2.75,-7.56,1.37],[-2.25,-7.04,1.43],[-1.75,-10.07,1.41],[-1.25,-12.52,1.51],[-0.75,-15.42,1.45],[-0.25,-15.12,1.38],[0.25,-12.04,1.25],[0.75,-9.33,1.38],[1.25,-7.98,1.4],[1.75,-9.27,1.39],[2.25,-9.27,1.41],[2.75,-8.15,1.51],[3.25,-9.78,1.36],[3.75,-7.29,1.28]],"spd":[[-3.75,-2.35,1.05],[-3.25,-3.1,1.03],[-2.75,-4.37,0.92],[-2.25,-5.87,0.9],[-1.75,-7.05,0.91],[-1.25,-8.74,0.91],[-0.75,-9.29,0.92],[-0.25,-9.64,0.9],[0.25,-5.59,0.91],[0.75,-4.9,0.95],[1.25,-4.61,0.93],[1.75,-4.6,0.93],[2.25,-5.02,1.0],[2.75,-3.42,1.07],[3.25,-3.46,0.94],[3.75,-3.63,0.88]]},"after":{"linke":[-9.25,1.18,2582,279],"spd":[-4.88,0.82,2732,386],"gruene":[-4.57,0.51,6097,478],"cducsu":[3.06,0.6,3959,368],"fdp":[11.09,0.65,3378,448],"afd":[12.37,0.94,3671,404]}},"est":{"afd":[[-0.415,0.167],[-0.342,0.151],[-0.267,0.163]],"fdp":[[0.168,0.222],[0.049,0.206],[0.198,0.211]]}}</script>
+<script>
+(function () {
+const D = JSON.parse(document.getElementById('data').textContent);
+const NS = 'http://www.w3.org/2000/svg';
+const P = ['linke', 'spd', 'gruene', 'cducsu', 'fdp', 'afd'];
+const LAB = { linke: 'The Left', spd: 'SPD', gruene: 'Greens', cducsu: 'CDU/CSU', fdp: 'FDP', afd: 'AfD' };
+const inText = p => p === 'linke' ? 'the Left' : LAB[p];              // party name inside a sentence
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmtSign = (v, d = 0) => (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(d);
+const mmss = t => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0');
+const longDate = iso => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const $ = id => document.getElementById(id);
+const AFD_FROM = 45, LEFT_FROM = -53;
+function sectorOf(a) {
+  if (a === null || a === undefined) return 'missing';
+  return a >= AFD_FROM ? 'afd' : a <= LEFT_FROM ? 'left' : 'centre';
+}
+const SECTOR_TEXT = {
+  afd: 'AfD sector (+45° and beyond)',
+  left: 'Left sector (−53° and beyond)',
+  centre: 'Centre of the chamber: not attributed to a party',
+  missing: 'No head pose: speaker not in frame'
+};
+
+/* ---------- chamber: every seat from the paper's floor plan ---------- */
+const B = 800, RMAX = 790;
+const vpt = (deg, r) => [r * Math.sin(deg * Math.PI / 180), B - r * Math.cos(deg * Math.PI / 180)];
+function wedge(a, b, r0, r1) {
+  const [x0, y0] = vpt(a, r1), [x1, y1] = vpt(b, r1), [x2, y2] = vpt(b, r0), [x3, y3] = vpt(a, r0);
+  return `M${x3},${y3} L${x0},${y0} A${r1},${r1} 0 0 1 ${x1},${y1} L${x2},${y2} A${r0},${r0} 0 0 0 ${x3},${y3} Z`;
+}
+function chamber(svg, seats, o = {}) {
+  const shA = el('path', { d: wedge(AFD_FROM, 86, 40, RMAX), class: 'shade p-afd' }, svg);
+  const shL = el('path', { d: wedge(-86, LEFT_FROM, 40, RMAX), class: 'shade p-linke' }, svg);
+  const gs = el('g', {}, svg);
+  function setSeats(s) {
+    gs.textContent = '';
+    for (const [x, y, g] of s) el('circle', { cx: x, cy: (B - y).toFixed(1), r: 8, class: 'seat p-' + g }, gs);
+  }
+  setSeats(seats);
+  for (const [a, dashed, lab] of D.plan.sectors) {
+    const [x, y] = vpt(a, RMAX);
+    el('line', { x1: 0, y1: B, x2: x, y2: y, stroke: 'var(--faint)', 'stroke-width': 2.5, 'stroke-dasharray': dashed ? '14 10' : '' }, svg);
+    const [lx, ly] = vpt(a, RMAX + 40);
+    const t = el('text', { x: lx, y: ly, 'font-size': 30, 'font-weight': 600, 'text-anchor': 'middle', 'dominant-baseline': 'middle' }, svg);
+    t.textContent = lab.replace('-', '−') + '°';
+  }
+  let sight = null;
+  if (o.sight) {
+    sight = el('g', {}, svg);
+    el('path', { d: wedge(-2.5, 2.5, 30, RMAX), fill: 'var(--sight)', 'fill-opacity': .1, stroke: 'none' }, sight);
+    el('line', { x1: 0, y1: B - 24, x2: 0, y2: B - RMAX, stroke: 'var(--sight)', 'stroke-width': 5, 'stroke-linecap': 'round' }, sight);
+    el('circle', { cx: 0, cy: B - RMAX, r: 10, fill: 'var(--sight)' }, sight);
+  }
+  el('path', { d: `M0,${B - 22} L-20,${B + 14} L20,${B + 14} Z`, fill: 'var(--fg)' }, svg);
+  const st = el('text', { x: 30, y: B + 6, 'font-size': 28, 'dominant-baseline': 'middle' }, svg);
+  st.textContent = 'speaker';
+  return {
+    setSeats,
+    setAngle(a) {
+      if (!sight) return;
+      const s = sectorOf(a);
+      sight.style.opacity = s === 'missing' ? 0 : 1;
+      if (s !== 'missing') sight.setAttribute('transform', `rotate(${a.toFixed(2)} 0 ${B})`);
+      shA.classList.toggle('on', s === 'afd');
+      shL.classList.toggle('on', s === 'left');
+    }
+  };
+}
+function legend(box, seats) {
+  const n = {};
+  for (const s of seats) n[s[2]] = (n[s[2]] || 0) + 1;
+  box.innerHTML = P.filter(p => n[p]).map(p => `<span class="p-${p}"><i></i><em>${LAB[p]} ${n[p]}</em></span>`).join('');
+}
+
+/* hero: 18th and 19th term */
+const hero = chamber($('chHero'), D.plan.seats19);
+legend($('legHero'), D.plan.seats19);
+function term(t) {
+  const s = t === 18 ? D.plan.seats18 : D.plan.seats19;
+  hero.setSeats(s); legend($('legHero'), s);
+  $('t18').setAttribute('aria-pressed', t === 18); $('t19').setAttribute('aria-pressed', t === 19);
+}
+$('t18').addEventListener('click', () => term(18));
+$('t19').addEventListener('click', () => term(19));
+
+/* ---------- shared speech machinery ---------- */
+function speechModel(S) {
+  const ix = Object.fromEntries(S.cols.map((c, i) => [c, i]));
+  const W = S.words;
+  const starts = W.map(w => w[ix.t0]);
+  function bs(arr, v) { let lo = 0, hi = arr.length - 1; if (!arr.length || v < arr[0]) return -1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (arr[m] <= v) lo = m; else hi = m - 1; } return lo; }
+  const key = ix.angSm;
+  const V = W.map((w, i) => [w[ix.t0], w[key] ?? w[ix.ang]]).filter(v => v[1] !== null);
+  const VT = V.map(v => v[0]), VA = V.map(v => v[1]);
+  return {
+    S, ix, W, starts, bs,
+    wordAt(t) { const i = bs(starts, t); return i < 0 ? -1 : i; },
+    angleAt(t, smooth) {
+      if (!smooth) { const i = bs(starts, t); if (i < 0) return null; const w = W[i]; return t <= w[ix.t1] + .35 ? w[ix.ang] : (W[i + 1] && W[i + 1][ix.ang] !== null ? w[ix.ang] : w[ix.ang]); }
+      const i = bs(VT, t); if (i < 0) return VA[0]; if (i >= VT.length - 1) return VA[VA.length - 1];
+      const f = Math.min(1, Math.max(0, (t - VT[i]) / (VT[i + 1] - VT[i]))); return VA[i] + (VA[i + 1] - VA[i]) * f;
+    }
+  };
+}
+function transcript(deBox, enBox, M) {
+  let cur = -1, spans = [];
+  return function (wi) {
+    if (wi < 0) { deBox.textContent = ''; enBox.textContent = ''; cur = -1; return; }
+    const si = M.W[wi][M.ix.sent];
+    if (si !== cur) {
+      cur = si; deBox.textContent = ''; spans = [];
+      M.W.forEach((w, i) => {
+        if (w[M.ix.sent] !== si) return;
+        const s = document.createElement('span');
+        s.textContent = w[M.ix.w] + ' ';
+        if (w[M.ix.named] === 'afd') s.classList.add('m-afd');
+        s.dataset.i = i; deBox.appendChild(s); spans.push(s);
+      });
+      const en = M.S.en[String(si)] || '';
+      enBox.innerHTML = en.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\bAfD\b/g, '<b>AfD</b>');
+      enBox.hidden = !en;
+    }
+    for (const s of spans) { const i = +s.dataset.i; s.classList.toggle('now', i === wi); s.classList.toggle('past', i < wi); }
+  };
+}
+function timeline(svg, M, t0, t1, o = {}) {
+  const X0 = 36, X1 = 632, Y0 = 16, Y1 = o.h || 128;
+  const tx = t => X0 + (X1 - X0) * (t - t0) / (t1 - t0);
+  const ty = a => Y0 + (Y1 - Y0) * (90 - Math.max(-90, Math.min(90, a))) / 180;
+  el('rect', { x: X0, y: ty(90), width: X1 - X0, height: ty(AFD_FROM) - ty(90), class: 'p-afd', 'fill-opacity': .1 }, svg);
+  el('rect', { x: X0, y: ty(LEFT_FROM), width: X1 - X0, height: ty(-90) - ty(LEFT_FROM), class: 'p-linke', 'fill-opacity': .1 }, svg);
+  el('line', { x1: X0, x2: X1, y1: ty(0), y2: ty(0), stroke: 'var(--rule)' }, svg);
+  [[68, 'AfD sector'], [-72, 'Left sector']].forEach(([a, s]) => { const t = el('text', { x: X0 + 4, y: ty(a) + 4, 'font-size': 11 }, svg); t.textContent = s; });
+  [-60, 0, 60].forEach(a => { const t = el('text', { x: X0 - 6, y: ty(a) + 4, 'font-size': 11, 'text-anchor': 'end' }, svg); t.textContent = fmtSign(a) + '°'; });
+  const step = o.tick || 60;
+  for (let s = Math.ceil(t0 / step) * step; s <= t1; s += step) { const t = el('text', { x: tx(s), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, svg); t.textContent = o.secs ? s + ' s' : mmss(s); }
+  const { W, ix } = M;
+  // sustained flank episodes, as counted by the attention outcome
+  W.forEach((w, i) => {
+    const e = w[ix.ep]; if (e !== 1 && e !== 2) return;
+    const a = w[ix.t0], b = W[i + 1] ? W[i + 1][ix.t0] : w[ix.t1];
+    el('rect', { x: tx(a), width: Math.max(1, tx(b) - tx(a)), y: e === 1 ? Y0 - 9 : Y1 + 2, height: 6, class: e === 1 ? 'p-afd' : 'p-linke' }, svg);
+  });
+  W.forEach(w => { const a = w[ix.ang]; if (a === null) return; el('circle', { cx: tx(w[ix.t0]).toFixed(1), cy: ty(a).toFixed(1), r: o.r || 1.4, fill: 'var(--faint)' }, svg); });
+  if (o.smooth) {
+    let d = '';
+    W.forEach(w => { const a = w[ix.angSm]; if (a === null) return; d += (d ? 'L' : 'M') + tx(w[ix.t0]).toFixed(1) + ',' + ty(a).toFixed(1); });
+    el('path', { d, fill: 'none', stroke: 'var(--fg)', 'stroke-width': 1.1 }, svg);
+  }
+  W.forEach(w => { const p = w[ix.named]; if (!p) return; el('line', { x1: tx(w[ix.t0]), x2: tx(w[ix.t0]), y1: Y0, y2: Y1, class: 'p-' + p, stroke: 'currentColor', 'stroke-width': 1.5 }, svg); });
+  if (o.gaps) W.forEach((w, i) => { if (w[ix.ang] !== null) return; el('rect', { x: tx(w[ix.t0]), width: Math.max(1.5, tx(w[ix.t1]) - tx(w[ix.t0])), y: ty(4), height: ty(-4) - ty(4), fill: 'var(--faint)', 'fill-opacity': .35 }, svg); });
+  const head = el('line', { x1: 0, x2: 0, y1: Y0 - 10, y2: Y1 + 8, stroke: 'var(--fg)', 'stroke-width': 2 }, svg);
+  el('rect', { x: X0, y: 0, width: X1 - X0, height: Y1 + 24, fill: 'transparent' }, svg);
+  return {
+    tx,
+    set(t) { head.setAttribute('x1', tx(t)); head.setAttribute('x2', tx(t)); svg.setAttribute('aria-valuenow', Math.round(t)); },
+    onSeek(fn) {
+      const go = ev => { const r = svg.getBoundingClientRect(); const x = (ev.clientX - r.left) / r.width * 640; fn(t0 + (x - X0) / (X1 - X0) * (t1 - t0)); };
+      svg.addEventListener('pointerdown', ev => { svg.setPointerCapture(ev.pointerId); go(ev); });
+      svg.addEventListener('pointermove', ev => { if (ev.buttons) go(ev); });
+      svg.addEventListener('keydown', ev => { const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return; ev.preventDefault(); fn(null, d); });
+    }
+  };
+}
+/* the clock follows the video; without one (local preview) it runs on its own */
+function clock(vid, offset, t0, t1, playBtn) {
+  const c = { t: t0, playing: false, videoOk: false, last: null };
+  const onMeta = () => { c.videoOk = true; try { vid.currentTime = c.t - offset; } catch (e) {} };
+  vid.addEventListener('loadedmetadata', onMeta);
+  if (vid.readyState >= 1) setTimeout(onMeta, 0);              // metadata arrived before this script ran
+  vid.addEventListener('play', () => { c.playing = true; playBtn.textContent = 'Pause'; });
+  vid.addEventListener('pause', () => { c.playing = false; playBtn.textContent = 'Play'; });
+  c.seek = t => { c.t = Math.max(t0, Math.min(t1, t)); if (c.videoOk) vid.currentTime = c.t - offset; };
+  c.play = on => {
+    if (c.videoOk) { on ? vid.play() : vid.pause(); return; }
+    c.playing = on; playBtn.textContent = on ? 'Pause' : 'Play';
+    if (on && c.t >= t1 - .2) c.t = t0;
+  };
+  playBtn.addEventListener('click', () => c.play(!c.playing));
+  c.tick = ts => {
+    const dt = c.last === null ? 0 : Math.min(.1, (ts - c.last) / 1000); c.last = ts;
+    if (c.videoOk) c.t = vid.currentTime + offset;
+    else if (c.playing) { c.t += dt; if (c.t >= t1) { c.t = t1; c.play(false); } }
+    return dt;
+  };
+  return c;
+}
+
+/* ---------- 1 · video to measure ---------- */
+(function () {
+  const S = D.demo, M = speechModel(S), ix = M.ix;
+  $('dWho').textContent = `${S.speaker} (${LAB[S.party]}), ${longDate(S.date)}, a 25-second excerpt.`;
+  const ch = chamber($('chDemo'), D.plan.seats19, { sight: true });
+  const tr = transcript($('dDe'), $('dEn'), M);
+  const tl = timeline($('dTl'), M, S.start, S.end, { tick: 5, secs: true, r: 2.4, gaps: true });
+  const c = clock($('dVid'), S.offset, S.start, S.end, $('dPlay'));
+  const steps = S.steps;
+  let shown = null, lastT = null, activeStep = -1;
+  const sb = $('dSteps');
+  steps.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = (i + 1) + ' · ' + s.title;
+    b.addEventListener('click', () => { showStep(i); c.play(false); c.seek(s.t); });
+    sb.appendChild(b);
+  });
+  function showStep(i) {
+    activeStep = i;
+    [...sb.children].forEach((b, k) => b.setAttribute('aria-pressed', k === i));
+    $('dStep').firstElementChild.textContent = i < 0 ? 'Press play' : `Step ${i + 1}: ${steps[i].title}`;
+    $('dStep').lastElementChild.textContent = i < 0 ? 'The excerpt pauses at six steps of the measurement.' : steps[i].desc;
+  }
+  showStep(0); c.t = steps[0].t;
+  $('dRestart').addEventListener('click', () => { showStep(-1); c.seek(S.start); c.play(true); });
+  tl.onSeek((t, d) => c.seek(t === null ? c.t + d : t));
+  const G = { 0: 'no visible gesture', 1: 'one hand', 2: 'two hands' };
+  const set = (id, v, miss) => { const e = $(id); e.textContent = v; e.classList.toggle('miss', !!miss); };
+  function frame(ts) {
+    c.tick(ts);
+    const t = c.t;
+    if (c.playing && lastT !== null && $('dHold').checked) {
+      const k = steps.findIndex(s => lastT < s.t && s.t <= t);
+      if (k >= 0) { c.play(false); c.seek(steps[k].t); showStep(k); }
+    }
+    lastT = c.t;
+    const wi = M.wordAt(c.t);
+    const w = wi >= 0 ? M.W[wi] : null;
+    const inWord = w && c.t <= w[ix.t1] + .05;
+    const a = w ? w[ix.ang] : null;
+    shown = a === null ? null : (shown === null || reduce ? a : shown + (a - shown) * .35);
+    ch.setAngle(shown);
+    tr(wi);
+    tl.set(c.t);
+    $('dTime').textContent = c.t.toFixed(1) + ' s';
+    if (!w) return requestAnimationFrame(frame);
+    set('mWord', (inWord ? '' : 'after ') + '“' + w[ix.w] + '”');
+    set('mInt', w[ix.t0].toFixed(2) + '–' + w[ix.t1].toFixed(2) + ' s');
+    set('mAng', a === null ? 'missing' : fmtSign(a, 1) + '°', a === null);
+    set('mSec', SECTOR_TEXT[sectorOf(a)], a === null);
+    set('mEp', w[ix.ep] === 1 ? 'AfD flank, active' : w[ix.ep] === 2 ? 'Left flank, active' : 'none');
+    set('mGest', w[ix.gest] === null ? 'missing' : G[w[ix.gest]], w[ix.gest] === null);
+    set('mName', w[ix.named] === 'afd' ? 'yes' : 'no');
+    set('mPitch', w[ix.pitch] === null ? 'not voiced' : w[ix.pitch].toFixed(0) + ' Hz', w[ix.pitch] === null);
+    set('mLoud', w[ix.loud] === null ? 'missing' : w[ix.loud].toFixed(1) + ' dB', w[ix.loud] === null);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- 2 · one whole speech ---------- */
+(function () {
+  const S = D.post, M = speechModel(S), ix = M.ix;
+  $('pWho').textContent = `${S.speaker} (${LAB[S.party]}), ${longDate(S.date)}, the full speech.`;
+  const ch = chamber($('chPost'), D.plan.seats19, { sight: true });
+  const tr = transcript($('pDe'), $('pEn'), M);
+  const end = M.W[M.W.length - 1][ix.t1];
+  const tl = timeline($('pTl'), M, 0, Math.ceil(end / 30) * 30, { smooth: true });
+  const c = clock($('pVid'), 0, 0, end, $('pPlay'));
+  const firstAfd = M.W.find(w => w[ix.named] === 'afd');
+  // open at rest on the first word of the AfD-flank episode around the first mention
+  const epWord = firstAfd && M.W.find(w => w[ix.ep] === 1 && w[ix.t0] >= firstAfd[ix.t0] - 3);
+  c.t = epWord ? epWord[ix.t0] + .05 : M.W[0][ix.t0];
+  $('pJump').addEventListener('click', () => { c.seek(firstAfd[ix.t0] - 3); c.play(true); });
+  tl.onSeek((t, d) => c.seek(t === null ? c.t + 5 * d : t));
+  // the readout and the line use each word's own angle, as the measure does; the timeline's
+  // smoothed trace is for reading only
+  let shown = null;
+  function frame(ts) {
+    c.tick(ts);
+    const wi = M.wordAt(c.t);
+    const a = wi >= 0 ? M.W[wi][ix.ang] : null;
+    shown = a === null ? null : (shown === null || reduce ? a : shown + (a - shown) * .35);
+    ch.setAngle(shown);
+    tr(wi);
+    tl.set(c.t);
+    $('pAng').textContent = a === null ? '—' : fmtSign(Math.round(a)) + '°';
+    $('pSec').textContent = SECTOR_TEXT[sectorOf(a)];
+    const ep = wi >= 0 ? M.W[wi][ix.ep] : 0;
+    $('pEpA').hidden = ep !== 1; $('pEpL').hidden = ep !== 2;
+    $('pTime').textContent = mmss(c.t);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- 3 · validation ---------- */
+(function () {
+  const svg = $('chVal');
+  chamber(svg, D.plan.seats19);
+  const rays = {}, after = D.fig2.after;
+  for (const p of P) {
+    const [m, se] = after[p];
+    const g = el('g', {}, svg);
+    el('path', { d: wedge(m - 1.96 * se, m + 1.96 * se, 30, RMAX), class: 'p-' + p, 'fill-opacity': .22 }, g);
+    const [x, y] = vpt(m, RMAX);
+    el('line', { x1: 0, y1: B - 24, x2: x, y2: y, class: 'p-' + p, stroke: 'currentColor', 'stroke-width': 5 }, g);
+    el('circle', { cx: x, cy: y, r: 11, class: 'p-' + p }, g);
+    rays[p] = g;
+  }
+  const tr = $('trace');
+  const X0 = 46, X1 = 630, Y0 = 14, Y1 = 196;
+  const qx = s => X0 + (X1 - X0) * (s + 4) / 8, qy = a => Y0 + (Y1 - Y0) * (20 - a) / 40;
+  [-20, -10, 0, 10, 20].forEach(a => {
+    el('line', { x1: X0, x2: X1, y1: qy(a), y2: qy(a), stroke: 'var(--rule)', 'stroke-dasharray': a ? '2 4' : '' }, tr);
+    const t = el('text', { x: X0 - 6, y: qy(a) + 4, 'font-size': 11, 'text-anchor': 'end' }, tr); t.textContent = fmtSign(a) + '°';
+  });
+  [-4, -2, 0, 2, 4].forEach(s => { const t = el('text', { x: qx(s), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, tr); t.textContent = s === 0 ? 'name spoken' : fmtSign(s) + ' s'; });
+  el('line', { x1: qx(0), x2: qx(0), y1: Y0, y2: Y1, stroke: 'var(--faint)', 'stroke-dasharray': '4 3' }, tr);
+  const yl = el('text', { x: X0, y: Y1 + 34, 'font-size': 11 }, tr); yl.textContent = 'Mean head angle, seconds relative to the naming word';
+  const traces = {};
+  for (const p of P) {
+    const pts = D.fig2.traces[p], g = el('g', {}, tr);
+    const up = pts.map(r => qx(r[0]) + ',' + qy(r[1] + 1.96 * r[2])), dn = pts.slice().reverse().map(r => qx(r[0]) + ',' + qy(r[1] - 1.96 * r[2]));
+    el('path', { d: 'M' + up.join('L') + 'L' + dn.join('L') + 'Z', class: 'p-' + p, 'fill-opacity': .15 }, g);
+    el('path', { d: 'M' + pts.map(r => qx(r[0]) + ',' + qy(r[1])).join('L'), style: 'fill:none', class: 'p-' + p, stroke: 'currentColor', 'stroke-width': 2 }, g);
+    traces[p] = g;
+  }
+  const chips = $('chips');
+  function pick(p) {
+    for (const q of P) {
+      rays[q].style.opacity = q === p ? 1 : .3;
+      traces[q].style.opacity = q === p ? 1 : .12;
+      chips.querySelector(`[data-p="${q}"]`).setAttribute('aria-pressed', q === p);
+    }
+    const [m, , n] = after[p];
+    $('rayLab').innerHTML = `Naming <b class="p-${p}">${inText(p)}</b>: head at ${fmtSign(m, 1)}° on average in the 1.5 s after (${n.toLocaleString('en')} mentions)`;
+    tr.appendChild(traces[p]);
+  }
+  for (const p of P) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip p-' + p; b.dataset.p = p;
+    b.innerHTML = `<i></i><span>${LAB[p]}</span>`;
+    b.addEventListener('click', () => pick(p));
+    chips.appendChild(b);
+    rays[p].addEventListener('pointerenter', () => pick(p));
+  }
+  pick('afd');
+})();
+
+/* ---------- 4 · allocation rule ---------- */
+(function () {
+  const STRENGTH = { cducsu: 246, spd: 153, afd: 92, fdp: 80, linke: 69, gruene: 67 };
+  function allocate(n) {
+    const s = Object.fromEntries(P.map(p => [p, 0]));
+    for (let k = 0; k < n; k++) {
+      let best = null, bv = -1;
+      for (const p of P) { const v = STRENGTH[p] / (2 * s[p] + 1); if (v > bv) { bv = v; best = p; } }
+      s[best]++;
+    }
+    return s;
+  }
+  const SIZES = []; for (let n = 14; n <= 49; n++) SIZES.push([n, allocate(n).afd / n * 100]);
+  const com = $('committee'), stp = $('steps');
+  const X0 = 48, X1 = 630, Y0 = 12, Y1 = 210, lo = 10, hi = 16;
+  const sx = n => X0 + (X1 - X0) * (n - 14) / 35, sy = v => Y0 + (Y1 - Y0) * (hi - v) / (hi - lo);
+  el('rect', { x: X0, y: sy(14.3), width: X1 - X0, height: sy(11.1) - sy(14.3), class: 'p-afd', 'fill-opacity': .09 }, stp);
+  const bt = el('text', { x: X1 - 4, y: sy(14.3) + 14, 'font-size': 11, 'text-anchor': 'end', class: 'p-afd' }, stp); bt.textContent = 'range of exposure in the sample';
+  [10, 12, 14, 16].forEach(v => { el('line', { x1: X0, x2: X1, y1: sy(v), y2: sy(v), stroke: 'var(--rule)', 'stroke-dasharray': '2 4' }, stp); const t = el('text', { x: X0 - 6, y: sy(v) + 4, 'font-size': 11, 'text-anchor': 'end' }, stp); t.textContent = v + '%'; });
+  [14, 20, 25, 30, 35, 40, 45, 49].forEach(n => { const t = el('text', { x: sx(n), y: Y1 + 18, 'font-size': 11, 'text-anchor': 'middle' }, stp); t.textContent = n; });
+  const xl = el('text', { x: X0, y: Y1 + 36, 'font-size': 11 }, stp); xl.textContent = 'Committee size (seats) and the AfD share of its seats';
+  el('path', { d: SIZES.map(([n, v], i) => (i ? 'L' + sx(n - .5) + ',' + sy(SIZES[i - 1][1]) + 'L' + sx(n - .5) + ',' + sy(v) : 'M' + sx(n - .5) + ',' + sy(v)) + 'L' + sx(n + .5) + ',' + sy(v)).join(''), fill: 'none', stroke: 'var(--fg)', 'stroke-width': 1.6 }, stp);
+  const cur = el('circle', { r: 6, class: 'p-afd', stroke: 'var(--panel)', 'stroke-width': 2 }, stp);
+  const cs = $('csize');
+  function draw() {
+    const n = +cs.value, a = allocate(n);
+    com.textContent = '';
+    const perRow = Math.ceil(n / 2), gap = Math.min(30, 600 / perRow);
+    let k = 0;
+    for (const p of P) for (let j = 0; j < a[p]; j++, k++) {
+      const row = k < perRow ? 0 : 1, col = row ? k - perRow : k;
+      el('circle', { cx: 20 + gap * col + gap / 2, cy: 30 + row * 46, r: Math.min(11, gap * .38), class: 'p-' + p, 'fill-opacity': p === 'afd' ? 1 : .35 }, com);
+    }
+    const share = a.afd / n * 100;
+    $('csizeOut').textContent = n + ' seats';
+    $('afdShareOut').textContent = share.toFixed(1) + '%';
+    $('afdSeatsOut').textContent = a.afd + ' AfD members · ' + P.filter(p => p !== 'afd').map(p => LAB[p] + ' ' + a[p]).join(' · ');
+    cur.setAttribute('cx', sx(n)); cur.setAttribute('cy', sy(share));
+  }
+  cs.addEventListener('input', draw);
+  draw();
+})();
+
+/* ---------- 5 · result ---------- */
+(function () {
+  const NAMES = ['Engagement (joint measure)', 'Names the AfD', 'Attention to the AfD flank'];
+  const fo = $('forest');
+  const X0 = 230, X1 = 620, fx = v => X0 + (X1 - X0) * (v + .8) / 1.6;
+  [-.8, -.4, 0, .4, .8].forEach(v => {
+    el('line', { x1: fx(v), x2: fx(v), y1: 6, y2: 190, stroke: v ? 'var(--rule)' : 'var(--faint)', 'stroke-dasharray': v ? '2 4' : '' }, fo);
+    const t = el('text', { x: fx(v), y: 206, 'font-size': 11, 'text-anchor': 'middle' }, fo); t.textContent = v ? fmtSign(v, 1) : '0';
+  });
+  const fl = el('text', { x: X0, y: 224, 'font-size': 11 }, fo); fl.textContent = 'Effect of least-to-most exposure (standard deviations)';
+  NAMES.forEach((name, i) => {
+    const y = 34 + i * 60;
+    const lt = el('text', { x: 0, y: y + 4, 'font-size': 14 }, fo); lt.style.fill = 'var(--fg)'; lt.textContent = name;
+    [['afd', -9], ['fdp', 9]].forEach(([k, dy]) => {
+      const [b, se] = D.est[k][i], col = 'var(--p-' + k + ')';
+      el('line', { x1: fx(b - 1.96 * se), x2: fx(b + 1.96 * se), y1: y + dy, y2: y + dy, stroke: col, 'stroke-width': i ? 2 : 3.5 }, fo);
+      el('circle', { cx: fx(b), cy: y + dy, r: i ? 5 : 6.5, fill: col }, fo);
+      const v = el('text', { x: fx(b + 1.96 * se) + 6, y: y + dy + 4, 'font-size': 11 }, fo); v.textContent = fmtSign(b, 2);
+    });
+  });
+  const grid = $('grid');
+  for (let i = 0; i < 100; i++) grid.appendChild(document.createElement('i'));
+  const att = $('attBar'), ax = v => 290 * v / 10;
+  el('rect', { x: 0, y: 14, width: 290, height: 22, fill: 'var(--seat-off)' }, att);
+  const fill = el('rect', { x: 0, y: 14, width: 0, height: 22, class: 'p-afd' }, att);
+  [0, 5, 10].forEach(v => { const t = el('text', { x: ax(v), y: 56, 'font-size': 11, 'text-anchor': v ? (v === 10 ? 'end' : 'middle') : 'start' }, att); t.textContent = v + '%'; });
+  const ex = $('expo');
+  function draw() {
+    const e = +ex.value, f = (e - 11.1) / 3.2;
+    const nm = 35.4 + (23.9 - 35.4) * f, at = 5.1 + (3.1 - 5.1) * f;
+    $('expoOut').textContent = e.toFixed(1) + '%';
+    $('extraOut').textContent = '+' + ((e - 11.1) / 100 * 39).toFixed(1) + ' AfD colleagues on a 39-seat committee';
+    $('nameOut').textContent = nm.toFixed(1) + ' of 100';
+    $('attOut').textContent = at.toFixed(1) + '%';
+    const on = Math.round(nm);
+    [...grid.children].forEach((c, i) => c.classList.toggle('on', i < on));
+    fill.setAttribute('width', ax(at));
+  }
+  ex.addEventListener('input', draw);
+  draw();
+})();
+})();
+</script>
