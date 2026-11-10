@@ -673,7 +673,7 @@ function clock(vid, offset, t0, t1, playBtn) {
 
 /* ---------- 2 · one whole speech ---------- */
 (function () {
-  const S = D.post, M = speechModel(S), ix = M.ix;
+  const S = { ...D.post, words: D.post.words.filter(w => w[1] <= 356.58) }, M = speechModel(S), ix = M.ix;
   $('pWho').textContent = `${S.speaker} (${LAB[S.party]}), ${longDate(S.date)}, the full speech.`;
   const ch = chamber($('chPost'), D.plan.seats19, { sight: true });
   const tr = transcript($('pDe'), $('pEn'), M);
